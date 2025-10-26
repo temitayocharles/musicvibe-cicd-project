@@ -240,7 +240,7 @@ git push origin main
 
 ## Related Repositories
 
-- **Public Template:** github.com/temitayocharles/ultimate-pipeline
+- **Public Template:** github.com/temitayocharles/my-terraform-k8s
   - Template version without my personal data
   - For public sharing and collaboration
   - Users need to configure their own AWS resources
