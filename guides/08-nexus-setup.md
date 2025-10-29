@@ -202,68 +202,114 @@ nuget.org-proxy        proxy    nuget
 ---
 
 
-## Task 5: Enable Redeployment for Snapshots
+## Task 5: Enable Redeployment for maven-snapshots Repository
 
-Allow overwriting snapshot artifacts during development.
+Allow overwriting snapshot artifacts during development (as shown in original tutorial).
 
 
 ### Instructions
 
-**5.1** From the repositories list, click on `maven-snapshots`.
+**5.1** Make sure you're logged into Nexus web interface.
 
 
-**5.2** Scroll down to "Hosted" section.
+**5.2** Click the **⚙️ gear icon** (Server administration and configuration) in the **top menu bar**.
 
 
-**5.3** Find "Deployment policy" setting.
+**5.3** In the left sidebar, find the **Repository** section.
 
 
-**5.4** Change it to:
+**5.4** Under **Repository** section, click **Repositories**.
+
+
+**5.5** You'll see a list of repositories. Find and click on **maven-snapshots**.
+
+
+**5.6** The configuration page opens. Scroll down to the **Hosted** section.
+
+
+**5.7** In the **Hosted** section, find the dropdown labeled **"Deployment policy"**.
+
+
+**5.8** Click the dropdown and change it from:
 
 ```
-Deployment policy: Allow redeploy
+Disable redeploy  ❌
+```
+
+to:
+
+```
+Allow redeploy  ✅
 ```
 
 
-**Why:** During development, you'll build the same SNAPSHOT version multiple times. This allows overwriting.
+**Why this matters:** During development, you'll build the same SNAPSHOT version multiple times. Without "Allow redeploy", Nexus rejects duplicate versions.
 
 
-**5.5** Scroll to bottom and click "Save".
+**5.9** Scroll all the way to the **bottom** of the page.
 
 
-**5.6** Go back to repositories list (click "Repositories" in left sidebar).
+**5.10** Click the blue **Save** button.
 
 
-**5.7** Click on `maven-releases`.
+**5.11** You should see a success message: "Repository updated: maven-snapshots"
 
 
-**5.8** Scroll to "Deployment policy".
+### Verification
+
+**You should see:** 
+* Deployment policy for maven-snapshots is now **"Allow redeploy"**
 
 
-**5.9** Keep it as:
+---
+
+
+## Task 6: Verify maven-releases Deployment Policy
+
+Ensure release artifacts cannot be overwritten (best practice).
+
+
+### Instructions
+
+**6.1** From the repositories list, click **Repositories** in left sidebar (if not already there).
+
+
+**6.2** Find and click on **maven-releases**.
+
+
+**6.3** Scroll down to the **Hosted** section.
+
+
+**6.4** Check the **Deployment policy** dropdown.
+
+
+**6.5** It should be set to:
 
 ```
 Deployment policy: Disable redeploy
 ```
 
 
-**Why:** Release versions should be immutable. Once published, they cannot be changed.
+**Why:** Release versions (e.g., 1.0.0) should be immutable. Once published, they cannot be changed. This prevents accidental overwrites.
 
 
-**5.10** Verify it's set to "Disable redeploy" and click "Save" if you changed anything.
+**6.6** If it's already "Disable redeploy", **do not change it**. Click **Cancel** or navigate away.
+
+
+**If it's set to "Allow redeploy"**, change it to "Disable redeploy" and click **Save**.
 
 
 ### Verification
 
-**Configuration:**
-* maven-snapshots: Allow redeploy ✓
-* maven-releases: Disable redeploy ✓
+**Configuration is now:**
+* `maven-snapshots`: Allow redeploy ✅ (for development)
+* `maven-releases`: Disable redeploy ✅ (for production)
 
 
 ---
 
 
-## Task 6: Get Repository URLs
+## Task 7: Get Repository URLs
 
 Record the URLs needed for Maven configuration.
 
@@ -310,7 +356,7 @@ http://nexus-sonarqube.musicvibe-services.local:8081/repository/maven-snapshots/
 ---
 
 
-## Task 7: Test Nexus Connection from Jenkins Server
+## Task 8: Test Nexus Connection from Jenkins Server
 
 Verify Jenkins can reach Nexus via service discovery.
 

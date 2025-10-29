@@ -172,7 +172,266 @@ If you prefer to trigger builds manually only, leave all checkboxes unchecked.
 ---
 
 
-## Task 5: Configure Pipeline from SCM
+## Task 5: Verify Jenkinsfile in Repository (Or Create If Building From Scratch)
+
+The Jenkinsfile defines all pipeline stages. If you cloned the MusicVibe repository, it already exists. If building from scratch, create it now.
+
+
+### Option A: Repository Already Has Jenkinsfile (Most Users)
+
+**5A.1** If you cloned `https://github.com/temitayocharles/musicvibe-cicd-project.git`:
+
+The Jenkinsfile already exists at `ci-cd/Jenkinsfile`. **Skip to Task 6.**
+
+
+### Option B: Creating Jenkinsfile From Scratch (Advanced)
+
+**Follow these steps only if you're building your own repository from scratch.**
+
+
+**5B.1** On your local machine, navigate to your project directory:
+
+```bash
+cd ~/path/to/your-music-project
+```
+
+
+**5B.2** Create the `ci-cd` directory if it doesn't exist:
+
+```bash
+mkdir -p ci-cd
+```
+
+
+**5B.3** Create the Jenkinsfile:
+
+```bash
+vi ci-cd/Jenkinsfile
+```
+
+
+**5B.4** Press `i` to enter insert mode.
+
+
+**5B.5** Paste this complete Jenkins pipeline configuration:
+
+<details>
+<summary>Click to expand complete Jenkinsfile (177 lines)</summary>
+
+```groovy
+pipeline {
+    agent any
+    
+    tools {
+        // Docker tool configured in Jenkins
+    }
+    
+    environment {
+        APP_NAME = "musicvibe"
+        DOCKER_IMAGE = "YOUR_DOCKERHUB_USERNAME/musicvibe"
+        DOCKER_TAG = "${BUILD_NUMBER}"
+        SONAR_URL = "http://nexus-sonarqube.musicvibe-services.local:9000"
+    }
+    
+    stages {
+        
+        stage('Git Checkout') {
+            steps {
+                git branch: 'main', 
+                    credentialsId: 'git-cred',
+                    url: 'https://github.com/YOUR_USERNAME/YOUR_REPO.git'
+            }
+        }
+        
+        stage('File System Scan') {
+            steps {
+                sh "trivy fs --format table -o trivy-fs-report.html ."
+            }
+        }
+        
+        stage('SonarQube Analysis') {
+            steps {
+                script {
+                    def scannerHome = tool 'sonar-scanner'
+                    withSonarQubeEnv('sonar-server') {
+                        sh """
+                            ${scannerHome}/bin/sonar-scanner \
+                            -Dsonar.projectKey=MusicVibe \
+                            -Dsonar.projectName=MusicVibe \
+                            -Dsonar.sources=apps/api/src,apps/frontend/src \
+                            -Dsonar.exclusions=**/node_modules/**,**/dist/**,**/build/**,**/*.test.ts,**/*.spec.ts
+                        """
+                    }
+                }
+            }
+        }
+        
+        stage('Quality Gate') {
+            steps {
+                script {
+                    timeout(time: 5, unit: 'MINUTES') {
+                        waitForQualityGate abortPipeline: false, credentialsId: 'sonar-token'
+                    }
+                }
+            }
+        }
+        
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    withDockerRegistry(credentialsId: 'docker-cred', toolName: 'docker') {
+                        sh """
+                            docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} \
+                                         -t ${DOCKER_IMAGE}:latest .
+                        """
+                    }
+                }
+            }
+        }
+        
+        stage('Docker Image Scan') {
+            steps {
+                sh """
+                    trivy image --format table \
+                         -o trivy-image-report.html \
+                         ${DOCKER_IMAGE}:${DOCKER_TAG}
+                """
+            }
+        }
+        
+        stage('Push Docker Image') {
+            steps {
+                script {
+                    withDockerRegistry(credentialsId: 'docker-cred', toolName: 'docker') {
+                        sh """
+                            docker push ${DOCKER_IMAGE}:${DOCKER_TAG}
+                            docker push ${DOCKER_IMAGE}:latest
+                        """
+                    }
+                }
+            }
+        }
+        
+        stage('Deploy to Kubernetes') {
+            steps {
+                withKubeConfig(
+                    caCertificate: '', 
+                    clusterName: 'kubernetes', 
+                    contextName: '',
+                    credentialsId: 'k8-cred', 
+                    namespace: 'musicvibe', 
+                    restrictKubeConfigAccess: false, 
+                    serverUrl: 'https://YOUR_MASTER_IP:6443'
+                ) {
+                    sh """
+                        kubectl apply -f kubernetes/musicvibe-deployment.yaml
+                        kubectl set image deployment/musicvibe \
+                            musicvibe=${DOCKER_IMAGE}:${DOCKER_TAG} \
+                            -n musicvibe
+                        kubectl rollout status deployment/musicvibe -n musicvibe --timeout=5m
+                    """
+                }
+            }
+        }
+        
+        stage('Verify Deployment') {
+            steps {
+                withKubeConfig(
+                    caCertificate: '', 
+                    clusterName: 'kubernetes', 
+                    contextName: '',
+                    credentialsId: 'k8-cred', 
+                    namespace: 'musicvibe', 
+                    restrictKubeConfigAccess: false, 
+                    serverUrl: 'https://YOUR_MASTER_IP:6443'
+                ) {
+                    sh """
+                        echo '=== Deployment Status ==='
+                        kubectl get deployment musicvibe -n musicvibe
+                        
+                        echo '=== Pod Status ==='
+                        kubectl get pods -n musicvibe -l app=musicvibe
+                        
+                        echo '=== Service Status ==='
+                        kubectl get svc musicvibe-service -n musicvibe
+                    """
+                }
+            }
+        }
+    }
+    
+    post {
+        always {
+            script {
+                def jobName = env.JOB_NAME
+                def buildNumber = env.BUILD_NUMBER
+                def pipelineStatus = currentBuild.result ?: 'UNKNOWN'
+                def bannerColor = pipelineStatus.toUpperCase() == 'SUCCESS' ? 'green' : 'red'
+                
+                def body = """
+                <html>
+                <body>
+                    <div style="border: 4px solid ${bannerColor}; padding: 10px;">
+                        <h2>${jobName} - Build ${buildNumber}</h2>
+                        <div style="background-color: ${bannerColor}; padding: 10px;">
+                            <h3 style="color: white;">Pipeline Status: ${pipelineStatus.toUpperCase()}</h3>
+                        </div>
+                        <p>Check the <a href="${BUILD_URL}">console output</a>.</p>
+                    </div>
+                </body>
+                </html>
+                """
+                
+                emailext (
+                    subject: "${jobName} - Build ${buildNumber} - ${pipelineStatus.toUpperCase()}",
+                    body: body,
+                    to: 'your-email@example.com',
+                    from: 'jenkins@example.com',
+                    replyTo: 'jenkins@example.com',
+                    mimeType: 'text/html',
+                    attachmentsPattern: 'trivy-image-report.html'
+                )
+            }
+            cleanWs()
+        }
+    }
+}
+```
+
+</details>
+
+
+**IMPORTANT Customizations:**
+
+Replace these placeholders:
+* `YOUR_DOCKERHUB_USERNAME` → your Docker Hub username
+* `YOUR_USERNAME/YOUR_REPO` → your GitHub repository
+* `YOUR_MASTER_IP` → Jenkins/K8s master private IP
+
+
+**5B.6** Press `ESC`, then type `:wq` and press `Enter` to save.
+
+
+**5B.7** Commit and push to GitHub:
+
+```bash
+git add ci-cd/Jenkinsfile
+git commit -m "Add Jenkins pipeline configuration"
+git push origin main
+```
+
+
+### Verification
+
+**Option A Users:** Jenkinsfile exists at `ci-cd/Jenkinsfile` in repository.
+
+**Option B Users:** Jenkinsfile created, committed, and pushed to GitHub.
+
+
+---
+
+
+## Task 6: Configure Pipeline from SCM
 
 Tell Jenkins to use Jenkinsfile from your GitHub repository.
 
@@ -254,7 +513,7 @@ ci-cd/Jenkinsfile
 ---
 
 
-## Task 6: Trigger First Build
+## Task 7: Trigger First Build
 
 Run the pipeline for the first time.
 
@@ -306,7 +565,7 @@ Run the pipeline for the first time.
 ---
 
 
-## Task 7: Monitor Build Progress
+## Task 8: Monitor Build Progress
 
 Watch the pipeline stages execute.
 
@@ -440,7 +699,7 @@ Duration: ~30 seconds
 ---
 
 
-## Task 8: Review Build Results
+## Task 9: Review Build Results
 
 Check that the build completed successfully.
 
@@ -480,7 +739,7 @@ Last Stable Build: #1
 ---
 
 
-## Task 9: Verify Artifacts in Nexus
+## Task 10: Verify Artifacts in Nexus
 
 Check that artifacts were published to Nexus.
 
@@ -532,7 +791,7 @@ database-0.0.1-SNAPSHOT.pom
 ---
 
 
-## Task 10: Verify Code Analysis in SonarQube
+## Task 11: Verify Code Analysis in SonarQube
 
 Check code quality analysis results.
 
@@ -582,7 +841,7 @@ Duplications: X%
 ---
 
 
-## Task 11: Verify Docker Image in Docker Hub
+## Task 12: Verify Docker Image in Docker Hub
 
 Check that the image was pushed to Docker Hub.
 
@@ -631,7 +890,7 @@ Last Pushed: <recent timestamp>
 ---
 
 
-## Task 12: Verify Deployment in Kubernetes
+## Task 13: Verify Deployment in Kubernetes
 
 Check that the application is running in Kubernetes.
 
@@ -738,7 +997,7 @@ exit
 ---
 
 
-## Task 13: Access Application in Browser
+## Task 14: Access Application in Browser
 
 Open the musicvibe application.
 

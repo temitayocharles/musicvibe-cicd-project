@@ -684,6 +684,142 @@ kubectl rollout restart deployment coredns -n kube-system
 ---
 
 
+## Task 6: Create Kubernetes Deployment Manifest
+
+Create the deployment configuration file for the MusicVibe application.
+
+
+### Instructions
+
+**6.1** Make sure you're still SSH'd to the master node. If not:
+
+```bash
+ssh -i k8s-pipeline-key.pem ubuntu@<JENKINS_MASTER_PUBLIC_IP>
+```
+
+
+**6.2** Create the deployment manifest file:
+
+```bash
+vi deployment-service.yaml
+```
+
+
+**6.3** Press `i` to enter insert mode.
+
+
+**6.4** Paste this complete Kubernetes configuration:
+
+```yaml
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: musicvibe
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: musicvibe
+  namespace: musicvibe
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: musicvibe
+  template:
+    metadata:
+      labels:
+        app: musicvibe
+    spec:
+      containers:
+      - name: musicvibe
+        image: temitayocharles/musicvibe:latest
+        ports:
+        - containerPort: 4000
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 4000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 4000
+          initialDelaySeconds: 10
+          periodSeconds: 5
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: musicvibe-service
+  namespace: musicvibe
+spec:
+  type: LoadBalancer
+  selector:
+    app: musicvibe
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 4000
+      nodePort: 30080
+```
+
+
+**What this configuration does:**
+
+* **Namespace:** Creates isolated environment called "musicvibe"
+* **Deployment:** Runs 2 replicas of MusicVibe for high availability
+* **Container:** Uses Docker image from temitayocharles/musicvibe:latest
+* **Health Checks:** Liveness probe restarts unhealthy containers, readiness probe controls traffic
+* **Resources:** Limits CPU and memory usage per pod
+* **Service:** Exposes application on port 30080 with LoadBalancer type
+
+
+**6.5** Press `ESC` to exit insert mode.
+
+
+**6.6** Type `:wq` and press `Enter` to save and exit.
+
+
+**6.7** Verify the file was created:
+
+```bash
+cat deployment-service.yaml
+```
+
+
+**Expected output:** The complete YAML you just pasted.
+
+
+**6.8** **Do NOT apply this manifest yet.** Jenkins will apply it during the pipeline in Step 9.
+
+
+**Why not apply now?**
+* The Docker image doesn't exist yet
+* The pipeline will build and push the image first
+* Then Jenkins will deploy using this manifest
+
+
+### Verification
+
+**You should have:** A file named `deployment-service.yaml` in `/home/ubuntu/` directory.
+
+
+---
+
+
 ## Checklist: Kubernetes Initialization Complete
 
 Verify before proceeding to Step 6:
@@ -695,10 +831,11 @@ Verify before proceeding to Step 6:
 [ ] Worker 1 joined cluster and shows Ready
 [ ] Worker 2 joined cluster and shows Ready
 [ ] All kube-system pods are Running
-[ ] webapps namespace created
+[ ] webapps namespace created (Note: musicvibe namespace will be created by deployment)
 [ ] Test nginx pod deployed and ran successfully
 [ ] kubectl commands work from master
 [ ] All 3 nodes visible in kubectl get nodes
+[ ] deployment-service.yaml manifest created on master
 ```
 
 

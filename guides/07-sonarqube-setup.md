@@ -71,60 +71,124 @@ Confirm password: <same password>
 ---
 
 
-## Task 2: Verify Authentication Token
+## Task 2: Generate Authentication Token for Jenkins
 
-Check that the token you created in Step 6 exists.
+Create a token that Jenkins will use to communicate with SonarQube.
 
 
 ### Instructions
 
-**2.1** Click on the "A" icon (top right corner).
+**2.1** In SonarQube web interface, click on the **A** icon (your admin avatar) in the **top-right corner**.
 
 
-**2.2** Select "My Account" from dropdown.
+**2.2** From the dropdown menu, select **My Account**.
 
 
-**2.3** Click "Security" tab.
+**2.3** Click the **Security** tab.
 
 
-**2.4** In the "Tokens" section, you should see:
+**2.4** Scroll down to the **Generate Tokens** section.
+
+
+**2.5** Fill in the token details:
 
 ```
 Name: jenkins-token
 Type: Global Analysis Token
-Created: <today's date>
+Expires in: No expiration
 ```
 
 
-**If you DON'T see the token:**
+**2.6** Click the **Generate** button.
 
-**Create it now:**
 
-1. In "Generate Tokens" section, enter:
-   ```
-   Name: jenkins-token
-   Type: Global Analysis Token
-   Expires in: No expiration
-   ```
+**2.7** **IMPORTANT:** The token will appear only once. It looks like:
 
-2. Click "Generate"
+```
+squ_a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0
+```
 
-3. Copy the token immediately (looks like `squ_...`)
 
-4. Go back to Jenkins → Manage Jenkins → Credentials
+**2.8** **Copy this entire token immediately.**
 
-5. Find "sonar-token" credential and update it with new token
+
+**Where to save it:**
+
+* Copy to a secure note
+* You will add this to Jenkins in the next sub-task
+
+
+**2.9** After copying, click **Done**.
 
 
 ### Verification
 
-**You should have:** A valid token named "jenkins-token" in SonarQube.
+**You should see:** In the **Tokens** section, a new token listed:
+
+```
+Name: jenkins-token
+Type: Global Analysis Token  
+Created: <today's date>
+Last Use: Never
+```
 
 
 ---
 
 
-## Task 3: Test SonarQube Connection from Jenkins
+## Task 3: Add SonarQube Token to Jenkins
+
+Now add the token you just created to Jenkins credentials.
+
+
+### Instructions
+
+**3.1** Open Jenkins in another browser tab (or switch to existing Jenkins tab):
+
+```
+http://<JENKINS_MASTER_PUBLIC_IP>:8080
+```
+
+
+**3.2** Click **Manage Jenkins** (left sidebar).
+
+
+**3.3** Click **Credentials** (under Security section).
+
+
+**3.4** Click on **(global)** domain.
+
+
+**3.5** Click **Add Credentials** (left sidebar).
+
+
+**3.6** Fill in the credential form:
+
+```
+Kind: Secret text
+
+Scope: Global (Jenkins, nodes, items, all child items, etc)
+
+Secret: <paste the SonarQube token you copied>
+
+ID: sonar-token
+
+Description: SonarQube authentication token
+```
+
+
+**3.7** Click **Create**.
+
+
+### Verification
+
+**You should see:** "sonar-token" credential listed in the global credentials list.
+
+
+---
+
+
+## Task 4: Test SonarQube Connection from Jenkins
 
 Verify Jenkins can communicate with SonarQube.
 
@@ -175,7 +239,7 @@ Don't worry, we'll verify the connection when we run the pipeline in Step 9.
 ---
 
 
-## Task 4: Review Default Quality Gate (Optional)
+## Task 5: Review Default Quality Gate (Optional)
 
 Understand SonarQube quality standards.
 
@@ -231,7 +295,7 @@ Your code will be analyzed against these standards. If any condition fails, the 
 ---
 
 
-## Task 5: Verify Service Discovery DNS (Advanced)
+## Task 6: Verify Service Discovery DNS (Advanced)
 
 Confirm SonarQube is accessible via service discovery name.
 
