@@ -250,7 +250,7 @@ feature_flags = {
 
 ## Quick Commands Reference
 
-For detailed commands, see [QUICK-REFERENCE.md](QUICK-REFERENCE.md)
+For detailed commands, see [guides/QUICK-REFERENCE.md]
 
 **Most Common:**
 ```bash
@@ -289,7 +289,7 @@ kubectl logs <pod> -n webapps    # View pod logs
 3. Monitor pipeline execution
 4. Check application deployment on K8s worker nodes
 5. View metrics in Grafana
-6. Read [QUICK-REFERENCE.md](QUICK-REFERENCE.md) for common tasks
+6. Read [guides/QUICK-REFERENCE.md] for common tasks
 
 ---
 
