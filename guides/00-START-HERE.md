@@ -244,6 +244,12 @@ Confirm with `yes` when prompted. This removes all AWS resources.
 Open `01-architecture.md` to understand the system architecture before deploying any infrastructure.
 
 This foundational knowledge is essential for successful implementation.
+---
+
+## Navigation
+* Document: [01-architecture.md](01-architecture.md)
+
+**Next:** [Step 1: Architecture Overview →](01-architecture.md)
 
 
 ---

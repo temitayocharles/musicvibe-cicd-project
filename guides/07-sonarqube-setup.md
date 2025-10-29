@@ -52,7 +52,6 @@ Log in to SonarQube for the first time.
 
 **1.1** Open SonarQube in your browser:
 
-```
 http://<NEXUS_SONARQUBE_PUBLIC_IP>:9000
 ```
 

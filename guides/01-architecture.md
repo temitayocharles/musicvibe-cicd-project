@@ -4,7 +4,6 @@
 
 **Goal:** Understand the complete system architecture before building it
 
-
 ---
 
 
@@ -15,9 +14,11 @@ This CI/CD pipeline consists of 5 AWS EC2 instances working together to provide 
 
 ### Infrastructure Components
 
-**Instance 1: Jenkins and Kubernetes Master (Combined)**
 * Purpose: CI/CD orchestration and Kubernetes control plane
 * Instance Type: t3.medium (2 vCPU, 4 GB RAM)
+## Navigation
+* Previous: [00-START-HERE.md](00-START-HERE.md)
+* Next: [02-aws-setup.md](02-aws-setup.md)
 * Services Running:
   * Jenkins (port 8080) - CI/CD automation
   * Kubernetes API Server (port 6443)

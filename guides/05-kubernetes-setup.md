@@ -5,7 +5,6 @@
 **Goal:** Initialize Kubernetes cluster on master node and join worker nodes
 
 
----
 
 <br>
 
@@ -30,7 +29,6 @@ By the end of this step:
 <br>
 
 
-
 ## Task 1: Initialize Kubernetes Master
 
 <br>
@@ -48,13 +46,13 @@ The master node controls the entire Kubernetes cluster.
 
 **1.1** SSH to the Jenkins/K8s master node:
 
-```bash
 cd ~/Documents/PROJECTS/ec2-k8s
 ssh -i k8s-pipeline-key.pem ubuntu@<JENKINS_MASTER_PUBLIC_IP>
 ```
 
 
 Replace `<JENKINS_MASTER_PUBLIC_IP>` with the IP from your terraform outputs.
+---
 
 
 **1.2** Once connected, verify you're on the master:

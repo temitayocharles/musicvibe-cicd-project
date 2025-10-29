@@ -492,10 +492,13 @@ Proceed to **Step 4: Terraform Deployment** (`04-terraform-deploy.md`)
 You will deploy the complete infrastructure to AWS.
 
 
----
 
 
 **Completion Time:** If you completed all tasks, you should have spent approximately 10 minutes.
 
 
 **Ready to deploy?** Ensure all checkboxes above are marked before proceeding.
+
+## Navigation
+* Previous: [02-aws-setup.md](02-aws-setup.md)
+* Next: [04-terraform-deploy.md](04-terraform-deploy.md)

@@ -187,13 +187,11 @@ Confirm password: admin123
 
 **3.7** On "Configure Anonymous Access" page:
 
-**Select:** "Enable anonymous access"
 
 
 **Why:** Allows Maven to download dependencies without authentication.
 
 
-**3.8** Click "Next".
 
 
 **3.9** Click "Finish".
@@ -229,14 +227,13 @@ Check that required repositories are already created.
 
 ### Instructions
 
-**4.1** Click the "gear" icon (⚙️) in the top menu (Server administration).
+**4.1** Click the "gear" icon in the top menu (Server administration).
 
 
 **4.2** Click "Repositories" (left sidebar under "Repository" section).
 
 
 **4.3** You should see these repositories:
-
 ```
 Name                    Type     Format
 maven-central          proxy    maven2
@@ -295,7 +292,7 @@ Allow overwriting snapshot artifacts during development (as shown in original tu
 **5.1** Make sure you're logged into Nexus web interface.
 
 
-**5.2** Click the **⚙️ gear icon** (Server administration and configuration) in the **top menu bar**.
+**5.2** Click the **gear icon** (Server administration and configuration) in the **top menu bar**.
 
 
 **5.3** In the left sidebar, find the **Repository** section.
@@ -316,13 +313,13 @@ Allow overwriting snapshot artifacts during development (as shown in original tu
 **5.8** Click the dropdown and change it from:
 
 ```
-Disable redeploy  ❌
+Disable redeploy
 ```
 
 to:
 
 ```
-Allow redeploy  ✅
+Allow redeploy
 ```
 
 
@@ -404,8 +401,8 @@ Deployment policy: Disable redeploy
 ### Verification
 
 **Configuration is now:**
-* `maven-snapshots`: Allow redeploy ✅ (for development)
-* `maven-releases`: Disable redeploy ✅ (for production)
+* `maven-snapshots`: Allow redeploy (for development)
+* `maven-releases`: Disable redeploy (for production)
 
 
 ---
@@ -776,7 +773,7 @@ curl http://nexus-sonarqube.musicvibe-services.local:8081
 **Problem:** Need to create maven-releases or maven-snapshots repository manually
 
 **Solution:**
-1. In Nexus, click ⚙️ → Repositories → Create repository
+1. In Nexus, click gear icon → Repositories → Create repository
 2. Select "maven2 (hosted)"
 3. For maven-releases:
    ```

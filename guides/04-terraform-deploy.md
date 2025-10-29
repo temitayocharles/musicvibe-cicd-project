@@ -41,15 +41,11 @@ cd ~/Documents/PROJECTS/ec2-k8s/terraform
 
 **1.2** Initialize Terraform:
 
-```bash
-terraform init
-```
 
 
 **Expected output:**
 ```
 Initializing the backend...
-
 Initializing provider plugins...
 - Finding hashicorp/aws versions matching "~> 5.0"...
 - Installing hashicorp/aws v5.x.x...

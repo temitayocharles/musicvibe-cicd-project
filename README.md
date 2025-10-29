@@ -19,21 +19,6 @@ A complete production-grade CI/CD platform for deploying the MusicVibe applicati
 - [Support](#support)
 
 
-## Overview
-
-This project provides a **complete, automated CI/CD pipeline** running on AWS infrastructure. It includes everything you need to build, test, analyze, containerize, and deploy a Java Spring Boot application.
-
-**What's Included:**
-- 5 EC2 instances managed by Terraform
-- Kubernetes cluster (1 master + 2 workers)
-- Complete Jenkins CI/CD pipeline (11 stages)
-- Code quality analysis (SonarQube)
-- Artifact management (Nexus)
-- Container security scanning (Trivy)
-- Infrastructure monitoring (Prometheus + Grafana)
-- AWS Cloud Map service discovery
-- Optional GitHub Actions OIDC authentication
-
 
 ## Features
 
@@ -130,7 +115,7 @@ guides/
 
 ### Reference Documentation
 
-- **[Quick Reference](docs/QUICK-REFERENCE.md)** - Commands, URLs, credentials cheat sheet
+- **[Quick Reference](guides/QUICK-REFERENCE.md)** - Commands, URLs, credentials cheat sheet
 - **[Terraform Infrastructure](terraform/README.md)** - Infrastructure details and configuration
 - **[Architecture Deep Dive](terraform/ARCHITECTURE.md)** - System design and component interaction
 - **[Terraform Quick Ref](terraform/QUICKREF.md)** - Terraform-specific commands

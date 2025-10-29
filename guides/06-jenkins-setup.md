@@ -113,7 +113,7 @@ jenkins --version
 
 <br>
 
-### ⚠️ If Jenkins is NOT Installed (Manual Installation Steps)
+### If Jenkins is NOT Installed (Manual Installation Steps)
 
 <br>
 
@@ -189,7 +189,7 @@ Version: 0.xx.x
 
 <br>
 
-### ⚠️ If Docker or Trivy is NOT Installed (Manual Installation Steps)
+### If Docker or Trivy is NOT Installed (Manual Installation Steps)
 
 <br>
 

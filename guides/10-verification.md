@@ -100,7 +100,6 @@ k8s-worker-2         Ready    <none>          Xh    v1.28.1
 
 
 **2.3** Check system pods:
-
 ```bash
 kubectl get pods -n kube-system
 ```
@@ -184,7 +183,6 @@ ping -c 2 jenkins-k8s-master.musicvibe-services.local
 ping -c 2 k8s-worker-1.musicvibe-services.local
 ping -c 2 k8s-worker-2.musicvibe-services.local
 
-# Nexus/SonarQube
 ping -c 2 nexus-sonarqube.musicvibe-services.local
 
 # Prometheus/Grafana
@@ -205,7 +203,6 @@ curl -I http://nexus-sonarqube.musicvibe-services.local:9000
 curl -I http://nexus-sonarqube.musicvibe-services.local:8081
 
 # Prometheus
-curl -I http://prometheus-grafana.musicvibe-services.local:9090
 
 # Grafana
 curl -I http://prometheus-grafana.musicvibe-services.local:3000
@@ -256,7 +253,6 @@ node-exporter (9100)            UP       job="node"
 
 ```bash
 ssh -i k8s-pipeline-key.pem ubuntu@<PROMETHEUS_GRAFANA_PUBLIC_IP>
-```
 
 
 **Check Prometheus config:**
@@ -276,7 +272,6 @@ scrape_configs:
 
   - job_name: 'node'
     static_configs:
-      - targets: ['localhost:9100']
 ```
 
 
@@ -310,14 +305,12 @@ exit
 
 Set up Grafana for monitoring visualization.
 
-
 ### Instructions
 
 **5.1** Open Grafana in browser:
 
 ```
 http://<PROMETHEUS_GRAFANA_PUBLIC_IP>:3000
-```
 
 
 **5.2** Log in with default credentials:
@@ -335,7 +328,7 @@ Password: admin
 
 **5.4** Add Prometheus as data source:
 
-* Click "⚙️" (Configuration) → "Data sources"
+* Click "Configuration" → "Data sources"
 * Click "Add data source"
 * Select "Prometheus"
 * Enter URL: `http://localhost:9090`
