@@ -161,6 +161,49 @@ terraform output
 
 ---
 
+## Pipeline Workflow: Code Push → Deployment
+
+```
+Developer Pushes Code
+        ↓
+GitHub Webhook → Jenkins
+        ↓
+╔═══════════════════════════════════════════════════════╗
+║  STAGE 1: Git Checkout                               ║
+║  STAGE 2: Compile (Maven)                            ║
+║  STAGE 3: Unit Tests (JUnit)                         ║
+║  STAGE 4: SonarQube Analysis (code quality)          ║
+║  STAGE 5: Quality Gate (wait for results)            ║
+║  STAGE 6: Build (create artifact)                    ║
+║  STAGE 7: Publish to Nexus (store artifact)          ║
+║  STAGE 8: Build Docker Image (create container)      ║
+║  STAGE 9: Trivy Scan (security check)                ║
+║  STAGE 10: Push to Docker Hub (upload image)         ║
+║  STAGE 11: Deploy to Kubernetes (rolling update)     ║
+╚═══════════════════════════════════════════════════════╝
+        ↓
+   ✓ All stages pass
+        ↓
+Kubernetes Rolling Update (zero-downtime)
+   • Old pods continue serving traffic
+   • New pods start with new version
+   • Health checks verify readiness
+   • Old pods terminate gracefully
+        ↓
+✓ Application Live on K8s Workers
+   • Traffic routed via K8s service
+   • Metrics collected by Prometheus
+   • Monitored in Grafana dashboards
+```
+
+**Pipeline Time:**
+- First run: 8-12 minutes
+- Subsequent runs: 5-8 minutes (cached builds)
+
+**For detailed pipeline breakdown, see [PIPELINE_WORKFLOW.md](PIPELINE_WORKFLOW.md)**
+
+---
+
 ## CI/CD Pipeline Stages
 
 1. **Git Checkout** - Clone repository
@@ -250,7 +293,7 @@ feature_flags = {
 
 ## Quick Commands Reference
 
-For detailed commands, see [guides/QUICK-REFERENCE.md]
+For detailed commands, see [QUICK-REFERENCE.md](QUICK-REFERENCE.md)
 
 **Most Common:**
 ```bash
@@ -289,7 +332,7 @@ kubectl logs <pod> -n webapps    # View pod logs
 3. Monitor pipeline execution
 4. Check application deployment on K8s worker nodes
 5. View metrics in Grafana
-6. Read [guides/QUICK-REFERENCE.md] for common tasks
+6. Read [QUICK-REFERENCE.md](QUICK-REFERENCE.md) for common tasks
 
 ---
 
