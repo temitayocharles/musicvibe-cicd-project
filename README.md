@@ -1,336 +1,243 @@
 # MusicVibe CI/CD Platform
 
-A complete production-grade CI/CD platform for deploying the MusicVibe application on AWS using Jenkins, Kubernetes, Docker, SonarQube, Nexus, and comprehensive monitoring.
+A production-grade CI/CD infrastructure for deploying applications on AWS with Jenkins, Kubernetes, Docker, SonarQube, Nexus, Prometheus, and Grafana.
 
-**Status:** Tested and Working | **Last Updated:** October 29, 2025
+**Status:** Ready to Deploy | **Setup Time:** ~3 hours | **Estimated Cost:** $50-250/month
 
+---
 
-## Table of Contents
+## What Is This?
 
-- [Overview](#overview)
-- [Features](#features)
-- [Quick Start](#quick-start)
-- [Documentation](#documentation)
-- [Infrastructure](#infrastructure)
-- [Project Structure](#project-structure)
-- [Application](#application)
-- [Prerequisites](#prerequisites)
-- [Cost Information](#cost-information)
-- [Support](#support)
+**Infrastructure:** Complete AWS Kubernetes cluster (1 master + 2 workers) with all CI/CD tooling pre-configured via Terraform and cloud-init scripts.
 
+**Application:** MusicVibe - a full-stack music discovery platform with global search (iTunes API), 30-second previews, lyrics viewer, and favorites management.
 
+**Pipeline:** Automated 11-stage Jenkins pipeline: Git → Compile → Test → SonarQube → Build → Nexus → Docker Build → Trivy Scan → Push → Deploy to K8s.
 
-## Features
-
-### Infrastructure
-**Infrastructure as Code** - Complete Terraform configuration with object-based variables  
-**Kubernetes v1.31** - Latest stable Kubernetes cluster (1 master + 2 workers)  
-**Service Discovery** - AWS Cloud Map DNS for internal service communication  
-**OIDC Authentication** - GitHub Actions can deploy without AWS credentials  
-**IAM Instance Profiles** - EC2 instances access AWS services securely  
-**Automated Setup** - All services installed via cloud-init scripts  
-**Cost Controls** - Toggle optional instances to save money  
-
-### CI/CD Pipeline
-**Automated Builds** - Git commit triggers full pipeline  
-**Code Quality** - SonarQube analysis with quality gates  
-**Security Scanning** - Trivy scans Docker images for vulnerabilities  
-**Artifact Storage** - Maven artifacts stored in Nexus  
-**Container Registry** - Docker images pushed to Docker Hub/ECR  
-**Auto-Deployment** - Kubernetes deployment with health verification  
-
-### Monitoring
-**Metrics Collection** - Prometheus scrapes system and application metrics  
-**Visualization** - Grafana dashboards for infrastructure and K8s  
-**Alerting** - Prometheus alert rules (customizable)  
-
-
-## Quick Start
-
-**For complete step-by-step instructions, see the [Setup Guides](guides/00-START-HERE.md)**
-
-### 1. Configure Infrastructure
-
-```bash
-cd terraform/
-cp terraform.auto.tfvars.example terraform.auto.tfvars
-# Edit terraform.auto.tfvars with your settings
-```
-
-### 2. Deploy Infrastructure
-
-```bash
-terraform init
-terraform plan
-terraform apply
-```
-
-### 3. Initialize Kubernetes
-
-```bash
-# SSH to master (use output from terraform)
-ssh -i k8s-pipeline-key.pem ubuntu@<MASTER_IP>
-
-# Run initialization script
-/home/ubuntu/init-k8s-master.sh
-```
-
-### 4. Configure Services
-
-Follow the detailed guides:
-- [Jenkins Configuration](guides/06-jenkins-setup.md)
-- [SonarQube Setup](guides/07-sonarqube-setup.md)
-- [Nexus Setup](guides/08-nexus-setup.md)
-
-### 5. Run Pipeline
-
-Create Jenkins pipeline job pointing to `ci-cd/Jenkinsfile` and trigger build.
-
-**Total setup time:** ~3 hours for first-time setup
-
-
-## Documentation
-
-### Getting Started Guides
-
-**Start here for hands-on learning:**
-
-```
-guides/
-├── 00-START-HERE.md          Master navigation and overview
-├── 01-architecture.md        System architecture (5 min)
-├── 02-aws-setup.md          AWS prerequisites (15 min)
-├── 03-local-setup.md        Terraform configuration (10 min)
-├── 04-terraform-deploy.md   Infrastructure deployment (20 min)
-├── 05-kubernetes-setup.md   K8s cluster initialization (20 min)
-├── 06-jenkins-setup.md      Jenkins configuration (40 min)
-├── 07-sonarqube-setup.md    SonarQube setup (15 min)
-├── 08-nexus-setup.md        Nexus configuration (20 min)
-├── 09-pipeline-setup.md     Pipeline creation (30 min)
-└── 10-verification.md       Testing and teardown (25 min)
-```
-
-**[→ Start with the guides](guides/00-START-HERE.md)**
-
-
-### Reference Documentation
-
-- **[Quick Reference](guides/QUICK-REFERENCE.md)** - Commands, URLs, credentials cheat sheet
-- **[Terraform Infrastructure](terraform/README.md)** - Infrastructure details and configuration
-- **[Architecture Deep Dive](terraform/ARCHITECTURE.md)** - System design and component interaction
-- **[Terraform Quick Ref](terraform/QUICKREF.md)** - Terraform-specific commands
-
-
-## Infrastructure
-
-### Components
-
-**5 EC2 Instances (all t3.medium):**
-
-1. **Jenkins + K8s Master** (combined)
-   - Jenkins CI/CD server (port 8080)
-   - Kubernetes master node
-   - kubectl, kubeadm, containerd
-
-2. **K8s Worker 1**
-   - Kubernetes worker node
-   - Runs application pods
-
-3. **K8s Worker 2**
-   - Kubernetes worker node
-   - Provides redundancy
-
-4. **Nexus + SonarQube** (combined)
-   - Nexus Repository (port 8081)
-   - SonarQube code analysis (port 9000)
-
-5. **Prometheus + Grafana** (combined)
-   - Prometheus metrics (port 9090)
-   - Grafana dashboards (port 3000)
-
-### Service Discovery
-
-Internal DNS names via AWS Cloud Map:
-
-```
-jenkins-k8s-master.musicvibe-services.local
-k8s-worker-1.musicvibe-services.local
-k8s-worker-2.musicvibe-services.local
-nexus-sonarqube.musicvibe-services.local
-prometheus-grafana.musicvibe-services.local
-```
-
-### Network Architecture
-
-- **VPC:** Default VPC (configurable)
-- **Security Groups:** Per-instance with minimal required access
-- **SSH Access:** Restricted to your IP (configure in tfvars)
-- **Service Communication:** Internal via service discovery DNS
-
-
-## Project Structure
-
-```
-.
-├── backend/                      # MusicVibe Spring Boot Application
-│   ├── src/                      # Application source code
-│   ├── pom.xml                   # Maven configuration (Java 21)
-│   ├── Dockerfile                # Container image definition
-│   └── mvnw*                     # Maven wrapper
-│
-├── frontend/                     # Frontend source (gets packaged into backend)
-│   ├── index.html                # Single-page application
-│   ├── styles.css                # Modern gradient styling
-│   └── app.js                    # Frontend logic
-│
-├── app-boardgame-backup/         # Legacy boardgame app (for reference)
-│
-├── ci-cd/                        # CI/CD Configuration
-│   ├── Jenkinsfile               # 11-stage pipeline definition
-│   └── sonar-project.properties  # SonarQube analysis config
-│
-├── kubernetes/                   # Kubernetes Manifests
-│   ├── deployment-service.yaml   # Legacy boardgame deployment
-│   └── musicvibe-deployment.yaml # MusicVibe deployment
-│
-├── terraform/                    # Infrastructure as Code
-│   ├── main.tf                   # EC2 instances
-│   ├── variables.tf              # Variable definitions
-│   ├── terraform.auto.tfvars     # Your configuration
-│   ├── sg.tf                     # Security groups
-│   ├── iam.tf                    # IAM roles & OIDC
-│   ├── service-discovery.tf      # AWS Cloud Map
-│   ├── outputs.tf                # Output values
-│   ├── backend.tf                # Remote state (optional)
-│   ├── README.md                 # Terraform documentation
-│   ├── ARCHITECTURE.md           # Architecture details
-│   ├── QUICKREF.md               # Terraform quick reference
-│   └── scripts/                  # Cloud-init installation scripts
-│
-├── guides/                       # Step-by-step setup guides
-│   ├── 00-START-HERE.md          # Navigation and overview
-│   ├── 01-architecture.md        # System architecture
-│   ├── 02-aws-setup.md           # AWS prerequisites
-│   ├── 03-local-setup.md         # Local environment setup
-│   ├── 04-terraform-deploy.md    # Infrastructure deployment
-│   ├── 05-kubernetes-setup.md    # K8s initialization
-│   ├── 06-jenkins-setup.md       # Jenkins configuration
-│   ├── 07-sonarqube-setup.md     # SonarQube setup
-│   ├── 08-nexus-setup.md         # Nexus configuration
-│   ├── 09-pipeline-setup.md      # Pipeline creation
-│   └── 10-verification.md        # Testing and teardown
-│
-├── docs/                         # Additional documentation
-│   └── QUICK-REFERENCE.md        # Quick reference card
-│
-├── README.md                     # This file
-└── .github-workflow-example.yml  # GitHub Actions OIDC template
-```
-
-
-## Application
-
-**MusicVibe - Global Music Discovery Platform**
-
-A modern full-stack music discovery application with global search, lyrics, and 30-second previews.
-
-### Technologies
-- **Backend:** Node.js 20, TypeScript 5.5, Fastify 4.28
-- **Frontend:** React 19, Vite 7, TypeScript
-- **External APIs:** iTunes Search API (free), lyrics.ovh API (free)
-- **Validation:** Zod schemas, TypeBox/Fastify validation
-- **Containerization:** Docker multi-stage build
-- **Deployment:** Single container serving API + static frontend
-
-### Features
-- Music library management (songs and playlists)
-- Global music search powered by iTunes (no API key required)
-- 30-second music previews with HTML5 audio player
-- Real-time lyrics viewer with modal UI
-- Favorites and play count tracking
-- Responsive glassmorphic UI with purple gradient design
-- RESTful API with comprehensive schema validation
-- Health check endpoint for container orchestration
-
-### API Endpoints
-- Health: `GET /health`
-- Songs: `GET /api/v1/songs`, `GET /api/v1/songs/:id`
-- Playlists: `GET /api/v1/playlists`, `GET /api/v1/playlists/:id`
-- Search: `GET /api/v1/search/global?q=<query>`
-- Lyrics: `GET /api/v1/lyrics?artist=<name>&title=<song>`
-- Favorites: `POST /api/v1/songs/:id/favorite`, `DELETE /api/v1/songs/:id/favorite`
-
-### Access
-- Application: http://localhost:4000
-- API: http://localhost:4000/api/v1/songs
-- Health: http://localhost:4000/health
-
-### Docker Hub
-Pull the multi-arch image (supports AMD64 and ARM64):
-
-```bash
-docker pull temitayocharles/musicvibe:v1.0
-docker run -d -p 4000:4000 temitayocharles/musicvibe:v1.0
-```
-
-### Local Development
-
-```bash
-# Backend
-cd apps/api/
-npm install
-npm run dev
-
-# Frontend (separate terminal)
-cd apps/frontend/
-npm install
-npm run dev
-```
-
+---
 
 ## Prerequisites
 
-### Required
-- **AWS Account** with admin or power user permissions
-- **AWS CLI** installed and configured
-- **Terraform** >= 1.0
-- **SSH Key Pair** created in AWS EC2
-- **Git** for version control
+- [ ] AWS Account with admin/power user IAM permissions
+- [ ] AWS CLI installed and configured: `aws configure`
+- [ ] Terraform >= 1.0 installed
+- [ ] SSH key pair created in AWS EC2 (us-east-1 or your region)
+- [ ] Git installed
+- [ ] Your local IP address (for SSH security group rule)
 
-### Optional
-- **Docker Hub Account** (or use AWS ECR)
-- **Java 17+** and **Maven** (for local development)
-- **kubectl** (for local K8s management)
+**Get your IP:**
+```bash
+curl ifconfig.me
+```
 
-### AWS Permissions Required
-- EC2 (instances, security groups, key pairs)
-- IAM (roles, policies, OIDC providers)
-- Route 53 (for Cloud Map service discovery)
-- Systems Manager (optional, for parameter store)
+---
 
+## Quick Start (5 Steps)
 
-## Cost Information
+### Step 1: Clone & Configure
 
-### Estimated Monthly Costs
+```bash
+git clone https://github.com/temitayocharles/musicvibe-cicd-project
+cd musicvibe-cicd-project/terraform
 
-**Minimum Setup** (Master + 1 Worker):
-- 2 × t3.medium instances
-- ~$50-60/month if running 24/7
+# Copy example config
+cp terraform.auto.tfvars.example terraform.auto.tfvars
 
-**Full Setup** (All 5 Instances):
-- 5 × t3.medium instances
-- ~$200-250/month if running 24/7
+# Edit with your values
+nano terraform.auto.tfvars
+```
 
-**Learning Mode** (Recommended):
-- Deploy for 4-hour sessions
-- Run `terraform destroy` after each session
-- Cost per session: ~$0.67
-- Monthly cost: ~$10-15 (if used 3-4 times/week)
+**Required values to set:**
+- `aws_region` - Your AWS region (e.g., us-east-1)
+- `ssh_key_name` - Your EC2 SSH key pair name
+- `allowed_ssh_ip` - Your local IP (from curl above)
+- `docker_hub_username` - Optional, for Docker Hub pushes
 
-### Cost Optimization Options
+### Step 2: Deploy Infrastructure
 
-**Disable optional instances in `terraform.auto.tfvars`:**
+```bash
+terraform init
+terraform plan      # Review what will be created
+terraform apply    # Deploy (takes ~5-7 minutes)
+```
 
+**Output:** Terraform displays all service IPs and URLs. Save these.
+
+### Step 3: Initialize Kubernetes Master
+
+```bash
+# Get master IP from terraform output
+MASTER_IP=$(terraform output -raw jenkins_master_ip)
+
+# SSH to master
+ssh -i /path/to/your-key.pem ubuntu@$MASTER_IP
+
+# Run K8s initialization (on master)
+/home/ubuntu/init-k8s-master.sh
+
+# Wait 2-3 minutes for completion
+# Exit SSH when done
+exit
+```
+
+### Step 4: Configure Services
+
+```bash
+# Get service IPs from terraform output
+terraform output
+
+# Access each service and complete setup:
+
+# Jenkins: http://<JENKINS_IP>:8080
+# - Get password: ssh to master, run: sudo cat /var/lib/jenkins/secrets/initialAdminPassword
+# - Install suggested plugins
+# - Create admin user
+
+# SonarQube: http://<SONARQUBE_IP>:9000
+# - Login: admin / admin
+# - Change password on first login
+# - Create project token for Jenkins
+
+# Nexus: http://<NEXUS_IP>:8081
+# - Get password: ssh to master, run: docker exec nexus cat /nexus-data/admin.password
+# - Change to admin / admin123
+
+# Grafana: http://<GRAFANA_IP>:3000
+# - Login: admin / admin
+# - Change password on first login
+```
+
+### Step 5: Run Pipeline & Deploy
+
+```bash
+# In Jenkins:
+# 1. Create new Pipeline job
+# 2. Point repository to: https://github.com/temitayocharles/musicvibe-cicd-project
+# 3. Set Jenkinsfile path: ci-cd/Jenkinsfile
+# 4. Configure credentials (Docker Hub, SonarQube token, Nexus)
+# 5. Click "Build"
+
+# Pipeline runs 11 stages: ~8-12 minutes (first run), ~5-8 minutes (subsequent)
+
+# Verify deployment:
+# - SSH to master
+# - kubectl get pods -n webapps
+# - kubectl get svc -n webapps
+```
+
+---
+
+## Service URLs & Credentials
+
+After `terraform apply`, run:
+```bash
+terraform output
+```
+
+| Service | URL | Default Credentials | Port |
+|---------|-----|-------------------|------|
+| Jenkins | `http://<JENKINS_IP>:8080` | Set during first login | 8080 |
+| SonarQube | `http://<SONARQUBE_IP>:9000` | admin / admin → change | 9000 |
+| Nexus | `http://<NEXUS_IP>:8081` | admin / (see Step 4) | 8081 |
+| Prometheus | `http://<PROMETHEUS_IP>:9090` | None (no auth) | 9090 |
+| Grafana | `http://<PROMETHEUS_IP>:3000` | admin / admin → change | 3000 |
+| App | `http://<WORKER_IP>:<NODE_PORT>` | None | Dynamic |
+
+---
+
+## Infrastructure Components
+
+| Instance | Role | Services | Cost |
+|----------|------|----------|------|
+| Instance 1 | Jenkins + K8s Master | Jenkins, kubectl, kubeadm | ~$40/month |
+| Instance 2 | K8s Worker 1 | Application pods | ~$40/month |
+| Instance 3 | K8s Worker 2 | Application pods, redundancy | ~$40/month |
+| Instance 4 | Nexus + SonarQube | Artifact + code quality | ~$40/month |
+| Instance 5 | Prometheus + Grafana | Monitoring | ~$40/month |
+
+**All instances:** t3.medium | **Total (5 instances):** ~$200-250/month
+
+**To save money:** Edit `terraform.auto.tfvars`, set `enable_monitoring_instance = false` and `enable_worker_2 = false` → reduces to ~$50-60/month.
+
+---
+
+## CI/CD Pipeline Stages
+
+1. **Git Checkout** - Clone repository
+2. **Compile** - Maven/npm build
+3. **Unit Tests** - Run test suite
+4. **SonarQube Analysis** - Code quality scan
+5. **Quality Gate** - Wait for SonarQube results
+6. **Build** - Create artifact (JAR/Docker image)
+7. **Publish to Nexus** - Upload artifact
+8. **Build Docker Image** - Create container
+9. **Trivy Scan** - Security vulnerability check
+10. **Push to Docker Hub** - Upload image
+11. **Deploy to Kubernetes** - Deploy & verify health
+
+---
+
+## Troubleshooting
+
+### Can't SSH to instances
+```bash
+# 1. Check key permissions
+chmod 400 /path/to/your-key.pem
+
+# 2. Verify your IP is in security group
+curl ifconfig.me  # Should match terraform.auto.tfvars allowed_ssh_ip
+
+# 3. If still failing, check AWS Console:
+# EC2 > Security Groups > terraform-created-sg > Inbound Rules
+```
+
+### Terraform apply fails
+```bash
+# Check AWS credentials
+aws sts get-caller-identity
+
+# If shows wrong account or error, reconfigure
+aws configure
+
+# Then retry
+terraform apply
+```
+
+### Kubernetes pods not starting
+```bash
+# SSH to master, then:
+kubectl get pods -n webapps
+kubectl describe pod <pod-name> -n webapps
+kubectl logs <pod-name> -n webapps
+```
+
+### Jenkins can't connect to SonarQube
+- Verify both instances have same security group (or allow inbound)
+- Check services running: `docker ps` on each machine
+- Restart service: `docker restart sonarqube` (wait 2 min)
+
+### Pipeline fails at Docker push
+- Verify Docker Hub credentials configured in Jenkins
+- Check Docker daemon is running: `docker ps`
+- Verify image name matches your Docker Hub username
+
+---
+
+## Cleanup & Cost Control
+
+**Stop instances (keeps data, saves ~90%):**
+```bash
+terraform state show | grep instance_id
+aws ec2 stop-instances --instance-ids <id1> <id2> <id3>
+```
+
+**Complete destruction (removes everything):**
+```bash
+terraform destroy
+```
+
+**Cost optimization:**
+Edit `terraform.auto.tfvars`:
 ```hcl
 feature_flags = {
   enable_monitoring_instance = false  # Saves ~$40/month
@@ -339,168 +246,61 @@ feature_flags = {
 }
 ```
 
-**Stop instances when not in use:**
+---
 
+## Quick Commands Reference
+
+For detailed commands, see [QUICK-REFERENCE.md](QUICK-REFERENCE.md)
+
+**Most Common:**
 ```bash
-# Stop all instances (data persists)
-aws ec2 stop-instances --instance-ids $(terraform output -json | jq -r '.*.value[]')
+terraform init          # Initialize Terraform
+terraform plan          # Preview changes
+terraform apply         # Deploy infrastructure
+terraform output        # Display service IPs
+terraform destroy       # Delete everything
 
-# Or destroy completely (removes everything)
-terraform destroy
+ssh -i key.pem ubuntu@IP    # SSH to instance
+/home/ubuntu/init-k8s-master.sh  # Initialize K8s (run on master)
+
+kubectl get pods -n webapps      # Check pod status
+kubectl logs <pod> -n webapps    # View pod logs
 ```
 
+---
 
-## CI/CD Pipeline Stages
+## What You Get
 
-The Jenkins pipeline executes 11 stages:
+✅ Production-grade Kubernetes cluster (3 nodes)  
+✅ Automated 11-stage CI/CD pipeline  
+✅ Code quality (SonarQube) + security scanning (Trivy)  
+✅ Artifact management (Nexus)  
+✅ Complete monitoring (Prometheus + Grafana)  
+✅ Service discovery (AWS Cloud Map)  
+✅ All infrastructure as code (Terraform)  
+✅ All services auto-configured (cloud-init)  
 
-1. **Git Checkout** - Clone repository
-2. **Compile** - Maven compile
-3. **Unit Tests** - Run JUnit tests
-4. **SonarQube Analysis** - Code quality scan
-5. **Quality Gate** - Wait for SonarQube results
-6. **Build** - Maven package (create JAR)
-7. **Publish to Nexus** - Upload artifact
-8. **Build Docker Image** - Create container image
-9. **Trivy Scan** - Security vulnerability scan
-10. **Push to Docker Hub** - Upload image to registry
-11. **Deploy to Kubernetes** - Apply K8s manifests and verify
-
-**Total pipeline time:** 8-12 minutes (first build), 5-8 minutes (subsequent)
-
-
-## Service URLs
-
-After deployment (get from `terraform output`):
-
-```
-Jenkins:     http://<JENKINS_IP>:8080
-SonarQube:   http://<NEXUS_SONARQUBE_IP>:9000
-Nexus:       http://<NEXUS_SONARQUBE_IP>:8081
-Prometheus:  http://<PROMETHEUS_IP>:9090
-Grafana:     http://<PROMETHEUS_IP>:3000
-Application: http://<WORKER_IP>:<NODE_PORT>
-```
-
-### Default Credentials
-
-**Jenkins:**
-- Initial password: `sudo cat /var/lib/jenkins/secrets/initialAdminPassword`
-- Set during first login
-
-**SonarQube:**
-- Default: `admin` / `admin`
-- Change on first login
-
-**Nexus:**
-- Initial password: `docker exec nexus cat /nexus-data/admin.password`
-- Recommended: `admin` / `admin123` (matches Maven settings)
-
-**Grafana:**
-- Default: `admin` / `admin`
-- Change on first login
-
-
-## Support
-
-### Getting Help
-
-1. **Check the guides:** [guides/00-START-HERE.md](guides/00-START-HERE.md)
-2. **Quick reference:** [docs/QUICK-REFERENCE.md](docs/QUICK-REFERENCE.md)
-3. **Troubleshooting:** Each guide has a troubleshooting section
-4. **Terraform issues:** See [terraform/README.md](terraform/README.md)
-
-### Common Issues
-
-**Can't SSH to instances:**
-```bash
-# Check key permissions
-chmod 400 k8s-pipeline-key.pem
-
-# Verify your IP in security group
-curl ifconfig.me
-```
-
-**Pipeline fails:**
-- Check Jenkins console output for specific error
-- Verify all credentials are configured
-- Ensure services are accessible via service discovery
-
-**Kubernetes pods not running:**
-```bash
-kubectl get pods -n webapps
-kubectl describe pod <pod-name> -n webapps
-kubectl logs <pod-name> -n webapps
-```
-
-
-## What You'll Learn
-
-By completing this project, you'll gain hands-on experience with:
-
-- **Infrastructure as Code** - Terraform for AWS resources
-- **Container Orchestration** - Kubernetes cluster management
-- **CI/CD Pipelines** - Jenkins multi-stage automation
-- **Code Quality** - SonarQube analysis and quality gates
-- **Security** - Container scanning with Trivy
-- **Artifact Management** - Nexus repository configuration
-- **Monitoring** - Prometheus metrics and Grafana dashboards
-- **Service Discovery** - AWS Cloud Map DNS
-- **Authentication** - OIDC for GitHub Actions
-- **DevOps Best Practices** - Complete production-like workflow
-
+---
 
 ## Next Steps
 
-After successful deployment:
-
-1. **Customize the pipeline** - Add integration tests, performance tests
-2. **Enhance Kubernetes** - Add Ingress, autoscaling, secrets management
-3. **Improve monitoring** - Custom metrics, alerts, dashboards
-4. **Implement GitOps** - ArgoCD or Flux for declarative deployments
-5. **Add security** - HashiCorp Vault, network policies, pod security
-6. **Multi-environment** - Dev, staging, production configurations
-7. **Blue-green deployments** - Zero-downtime releases
-
-
-## Contributing
-
-Contributions welcome! Please:
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Test thoroughly
-5. Submit a pull request
-
-
-## License
-
-This project is for educational and demonstration purposes.
-
-
-## Acknowledgments
-
-- Enhanced with production-grade infrastructure  
-- Service discovery and OIDC integration
-- Complete automation and monitoring
-- **MusicVibe application:** Modern music management with free APIs (no authentication required)
-- **Built by:** Temitayo Charles Akinniranye
-
-
-## Repository
-
-**GitHub:** [temitayocharles/musicvibe-cicd-project](https://github.com/temitayocharles/musicvibe-cicd-project)
-
+1. Complete Step 1-5 above
+2. Run a test build in Jenkins
+3. Monitor pipeline execution
+4. Check application deployment on K8s worker nodes
+5. View metrics in Grafana
+6. Read [QUICK-REFERENCE.md](QUICK-REFERENCE.md) for common tasks
 
 ---
 
-**Ready to get started?** → [Begin with the Setup Guides](guides/00-START-HERE.md)
+## Support
 
-**Need quick reference?** → [Quick Reference Card](docs/QUICK-REFERENCE.md)
-
-**Want to understand the architecture?** → [Architecture Guide](terraform/ARCHITECTURE.md)
+- Check output of `terraform apply` for all URLs
+- SSH to master and run `docker ps` to verify all services
+- Jenkins has detailed console logs for pipeline debugging
+- Each service has admin access for manual configuration
 
 ---
 
-**Made for DevOps learning and practice** | **Status:** Tested and Working
+**Made for DevOps learning and practice**  
+**Repository:** [github.com/temitayocharles/musicvibe-cicd-project](https://github.com/temitayocharles/musicvibe-cicd-project)
