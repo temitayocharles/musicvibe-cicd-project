@@ -1,0 +1,55 @@
+{
+  "name": "musicvibe-cicd-project",
+  "version": "1.0.0",
+  "description": "Production-grade CI/CD platform for MusicVibe application with Jenkins, Kubernetes, SonarQube, Nexus, and monitoring",
+  "private": true,
+  "workspaces": [
+    "apps/api",
+    "apps/frontend"
+  ],
+  "scripts": {
+    "install:all": "npm install && npm install --workspace=apps/api && npm install --workspace=apps/frontend",
+    "build:api": "npm run build --workspace=apps/api",
+    "build:frontend": "npm run build --workspace=apps/frontend",
+    "build:all": "npm run build:frontend && npm run build:api",
+    "dev:api": "npm run dev --workspace=apps/api",
+    "dev:frontend": "npm run dev --workspace=apps/frontend",
+    "test:api": "npm run test --workspace=apps/api",
+    "test:frontend": "npm run test --workspace=apps/frontend",
+    "test:all": "npm run test:api && npm run test:frontend",
+    "lint:api": "npm run lint --workspace=apps/api",
+    "lint:frontend": "npm run lint --workspace=apps/frontend",
+    "lint:all": "npm run lint:api && npm run lint:frontend",
+    "clean": "rm -rf apps/api/dist apps/api/node_modules apps/frontend/dist apps/frontend/node_modules node_modules",
+    "docker:build": "docker build -t musicvibe:local .",
+    "docker:run": "docker run -d -p 4000:4000 --name musicvibe musicvibe:local",
+    "docker:stop": "docker stop musicvibe && docker rm musicvibe",
+    "docker:logs": "docker logs -f musicvibe",
+    "health-check": "curl -s http://localhost:4000/health"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/temitayocharles/musicvibe-cicd-project.git"
+  },
+  "keywords": [
+    "music",
+    "nodejs",
+    "typescript",
+    "react",
+    "fastify",
+    "ci-cd",
+    "jenkins",
+    "kubernetes",
+    "docker",
+    "devops"
+  ],
+  "author": "Temitayo Charles Akinniranye",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=10.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.4"
+  }
+}
