@@ -253,4 +253,4 @@ This foundational knowledge is essential for successful implementation.
 
 **Last Updated:** October 25, 2025
 
-**Repository:** github.com/temitayocharles/ultimate-pipeline
+**Repository:** github.com/temitayocharles/musicvibe-cicd-project

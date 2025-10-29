@@ -25,18 +25,18 @@ SonarQube:   http://<NEXUS_SONARQUBE_IP>:9000
 Nexus:       http://<NEXUS_SONARQUBE_IP>:8081
 Prometheus:  http://<PROMETHEUS_IP>:9090
 Grafana:     http://<PROMETHEUS_IP>:3000
-Application: http://<WORKER_IP>:<NODE_PORT>
+MusicVibe:   http://<WORKER_IP>:<NODE_PORT> or http://localhost:4000 (local)
 ```
 
 
 ## Service Discovery DNS (Internal)
 
 ```
-jenkins-k8s-master.ultimate-cicd-devops.local
-k8s-worker-1.ultimate-cicd-devops.local
-k8s-worker-2.ultimate-cicd-devops.local
-nexus-sonarqube.ultimate-cicd-devops.local
-prometheus-grafana.ultimate-cicd-devops.local
+jenkins-k8s-master.musicvibe-services.local
+k8s-worker-1.musicvibe-services.local
+k8s-worker-2.musicvibe-services.local
+nexus-sonarqube.musicvibe-services.local
+prometheus-grafana.musicvibe-services.local
 ```
 
 
@@ -63,9 +63,10 @@ prometheus-grafana.ultimate-cicd-devops.local
 - Default: admin / admin
 - Change on first login
 
-**Application (Boardgame):**
-- User 1: bugs / bunny
-- User 2: daffy / duck
+**Application (MusicVibe):**
+- No authentication required for basic features
+- Music search, preview playback, and lyrics viewing available to all users
+- Favorites require no login (stored in memory)
 
 
 ## Quick Commands
@@ -141,22 +142,28 @@ SonarQube: sonar-token
 
 **Nexus Maven Repositories:**
 ```
-Releases:  http://nexus-sonarqube.ultimate-cicd-devops.local:8081/repository/maven-releases/
-Snapshots: http://nexus-sonarqube.ultimate-cicd-devops.local:8081/repository/maven-snapshots/
+Releases:  http://nexus-sonarqube.musicvibe-services.local:8081/repository/maven-releases/
+Snapshots: http://nexus-sonarqube.musicvibe-services.local:8081/repository/maven-snapshots/
 ```
 
 
 ## Docker Images
 
-**Initial deployment:**
+**MusicVibe Application:**
 ```
-bettysami/boardgame:latest (proven working image)
+temitayocharles/musicvibe:v1.0 (stable release)
+temitayocharles/musicvibe:latest (latest build)
 ```
 
-**After pipeline build:**
+**Pull and run:**
+```bash
+docker pull temitayocharles/musicvibe:v1.0
+docker run -d -p 4000:4000 temitayocharles/musicvibe:v1.0
 ```
-temitayocharles/boardgame:latest (your built image)
-```
+
+**Multi-architecture support:**
+- linux/amd64 (Intel/AMD processors)
+- linux/arm64 (Apple Silicon, ARM servers)
 
 
 ## Important Files
@@ -228,7 +235,7 @@ kubectl logs <pod-name> -n webapps
 ```bash
 # Wait 30-60 seconds after instance starts
 # Check Cloud Map in AWS Console
-# Test from instance: ping <service>.ultimate-cicd-devops.local
+# Test from instance: ping <service>.musicvibe-services.local
 ```
 
 

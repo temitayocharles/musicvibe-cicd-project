@@ -109,14 +109,14 @@ Then in workflow:
 Your Terraform configuration already created the OIDC provider and IAM role:
 
 - **OIDC Provider:** `token.actions.githubusercontent.com`
-- **IAM Role:** `ultimate-cicd-devops-github-actions-role`
-- **Trust Policy:** Configured for `temitayocharles/ultimate-pipeline`
+- **IAM Role:** `musicvibe-services-github-actions-role`
+- **Trust Policy:** Configured for `temitayocharles/musicvibe-cicd-project`
 
 The workflow automatically authenticates using:
 ```yaml
 - uses: aws-actions/configure-aws-credentials@v4
   with:
-    role-to-assume: arn:aws:iam::940482412089:role/ultimate-cicd-devops-github-actions-role
+    role-to-assume: arn:aws:iam::940482412089:role/musicvibe-services-github-actions-role
 ```
 
 ## How to Use
@@ -203,10 +203,10 @@ security-scan   package ─→ publish-nexus
 
 ```bash
 # Verify OIDC role exists
-aws iam get-role --role-name ultimate-cicd-devops-github-actions-role
+aws iam get-role --role-name musicvibe-services-github-actions-role
 
 # Check trust policy allows your repository
-aws iam get-role --role-name ultimate-cicd-devops-github-actions-role \
+aws iam get-role --role-name musicvibe-services-github-actions-role \
   --query 'Role.AssumeRolePolicyDocument'
 ```
 

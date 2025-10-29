@@ -122,7 +122,7 @@ aws ec2 start-instances --instance-ids <instance-id>
 
 **Service Discovery Not Working:**
 - Only works within VPC (not from internet)
-- SSH to an instance and test: `nslookup jenkins-k8s-master.ultimate-cicd-devops.local`
+- SSH to an instance and test: `nslookup jenkins-k8s-master.musicvibe-services.local`
 - Verify service registration: `aws servicediscovery list-services`
 
 **OIDC Authentication Failed:**

@@ -68,22 +68,25 @@ This CI/CD pipeline consists of 5 AWS EC2 instances working together to provide 
 
 ## Application Architecture
 
-**Application Name:** BoardGame Database
+**Application Name:** MusicVibe
 
 **Technology Stack:**
-* Java 17
-* Spring Boot 2.5.6
-* Spring Security for authentication
-* H2 embedded database
-* Thymeleaf templating
-* Maven build tool
+* Node.js 20
+* TypeScript 5.5
+* Fastify 4.28 (REST API)
+* React 19 (Frontend)
+* Vite 7 (Build tool)
+* iTunes Search API (Music data)
+* lyrics.ovh API (Lyrics)
 
 
 **Application Features:**
-* Board game listing and details
-* User reviews and ratings
-* Role-based access control (User and Manager roles)
-* Responsive web interface
+* Global music search via iTunes
+* 30-second music preview playback
+* Real-time lyrics viewer
+* Playlist management
+* Favorite songs tracking
+* Responsive glassmorphic UI with purple gradient
 
 
 ---
@@ -265,11 +268,11 @@ Instead of using hardcoded IP addresses, instances communicate using DNS names.
 **Internal DNS Names:**
 
 ```
-jenkins-k8s-master.ultimate-cicd-devops.local
-k8s-worker-1.ultimate-cicd-devops.local
-k8s-worker-2.ultimate-cicd-devops.local
-nexus-sonarqube.ultimate-cicd-devops.local
-monitoring.ultimate-cicd-devops.local
+jenkins-k8s-master.musicvibe-services.local
+k8s-worker-1.musicvibe-services.local
+k8s-worker-2.musicvibe-services.local
+nexus-sonarqube.musicvibe-services.local
+monitoring.musicvibe-services.local
 ```
 
 

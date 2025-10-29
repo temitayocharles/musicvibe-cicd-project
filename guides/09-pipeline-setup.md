@@ -44,7 +44,7 @@ http://<JENKINS_MASTER_PUBLIC_IP>:8080
 **1.4** Fill in the form:
 
 ```
-Enter an item name: boardgame-cicd
+Enter an item name: musicvibe-cicd
 ```
 
 
@@ -75,7 +75,7 @@ Add a description for the pipeline.
 **2.2** Enter description:
 
 ```
-Complete CI/CD pipeline for Boardgame Database application.
+Complete CI/CD pipeline for MusicVibe application.
 Includes: build, test, code analysis, security scan, artifact storage, Docker build, and Kubernetes deployment.
 ```
 
@@ -104,7 +104,7 @@ Link the pipeline to your GitHub repository.
 **3.2** Enter Project URL:
 
 ```
-https://github.com/temitayocharles/ultimate-pipeline/
+https://github.com/temitayocharles/musicvibe-cicd-project/
 ```
 
 
@@ -202,7 +202,7 @@ Git
 **5.4** In "Repository URL", enter:
 
 ```
-https://github.com/temitayocharles/ultimate-pipeline.git
+https://github.com/temitayocharles/musicvibe-cicd-project.git
 ```
 
 
@@ -340,7 +340,7 @@ Duration: ~30 seconds
 **Stage 2: Compile**
 ```
 Expected output:
-[INFO] Building Board Game Database Project
+[INFO] Building MusicVibe Application
 [INFO] Compiling 10 source files...
 [INFO] BUILD SUCCESS
 ```
@@ -350,7 +350,7 @@ Duration: ~2 minutes (first time downloads Maven dependencies)
 **Stage 3: Unit Tests**
 ```
 Expected output:
-Running com.boardgame.BoardGameDatabaseApplicationTests
+Running com.javaproject.DatabaseServiceProjectApplicationTests
 Tests run: X, Failures: 0, Errors: 0, Skipped: 0
 [INFO] BUILD SUCCESS
 ```
@@ -398,7 +398,7 @@ Duration: ~30 seconds
 ```
 Expected output:
 Successfully built abc123def456
-Successfully tagged temitayocharles/boardgame:latest
+Successfully tagged temitayocharles/musicvibe:latest
 ```
 Duration: ~2 minutes
 
@@ -415,7 +415,7 @@ Duration: ~2 minutes
 **Stage 10: Push to Docker Hub**
 ```
 Expected output:
-The push refers to repository [docker.io/temitayocharles/boardgame]
+The push refers to repository [docker.io/temitayocharles/musicvibe]
 latest: digest: sha256:abc123... size: 2841
 ```
 Duration: ~1 minute
@@ -424,10 +424,10 @@ Duration: ~1 minute
 **Stage 11: Deploy to Kubernetes**
 ```
 Expected output:
-deployment.apps/boardgame configured
-service/boardgame configured
+deployment.apps/musicvibe configured
+service/musicvibe configured
 Waiting for deployment to be ready...
-deployment "boardgame" successfully rolled out
+deployment "musicvibe" successfully rolled out
 ```
 Duration: ~30 seconds
 
@@ -507,7 +507,7 @@ http://<NEXUS_SONARQUBE_PUBLIC_IP>:8081
 
 ```
 com/
-  → boardgame/
+  → musicvibe/
     → database/
       → 0.0.1-SNAPSHOT/
 ```
@@ -552,7 +552,7 @@ http://<NEXUS_SONARQUBE_PUBLIC_IP>:9000
 **10.3** You should see a project:
 
 ```
-com.boardgame:database
+com.musicvibe:database
 ```
 
 
@@ -605,7 +605,7 @@ https://hub.docker.com
 **11.4** You should see:
 
 ```
-temitayocharles/boardgame
+temitayocharles/musicvibe
 ```
 
 
@@ -656,7 +656,7 @@ kubectl get deployments -n webapps
 
 ```
 NAME        READY   UP-TO-DATE   AVAILABLE   AGE
-boardgame   2/2     2            2           Xm
+musicvibe   2/2     2            2           Xm
 ```
 
 
@@ -674,8 +674,8 @@ kubectl get pods -n webapps
 
 ```
 NAME                         READY   STATUS    RESTARTS   AGE
-boardgame-xxxxxxxxxx-xxxxx   1/1     Running   0          Xm
-boardgame-xxxxxxxxxx-xxxxx   1/1     Running   0          Xm
+musicvibe-xxxxxxxxxx-xxxxx   1/1     Running   0          Xm
+musicvibe-xxxxxxxxxx-xxxxx   1/1     Running   0          Xm
 ```
 
 
@@ -693,7 +693,7 @@ kubectl get svc -n webapps
 
 ```
 NAME        TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(S)        AGE
-boardgame   LoadBalancer   10.96.xxx.xxx   <pending>     80:xxxxx/TCP   Xm
+musicvibe   LoadBalancer   10.96.xxx.xxx   <pending>     80:xxxxx/TCP   Xm
 ```
 
 
@@ -703,7 +703,7 @@ boardgame   LoadBalancer   10.96.xxx.xxx   <pending>     80:xxxxx/TCP   Xm
 **12.5** Get the NodePort:
 
 ```bash
-kubectl get svc boardgame -n webapps -o jsonpath='{.spec.ports[0].nodePort}'
+kubectl get svc musicvibe -n webapps -o jsonpath='{.spec.ports[0].nodePort}'
 ```
 
 
@@ -720,7 +720,7 @@ curl http://localhost:<NODE_PORT>
 Replace `<NODE_PORT>` with the number from previous step.
 
 
-**Expected output:** HTML content of the boardgame application.
+**Expected output:** HTML content of the musicvibe application.
 
 
 **12.7** Exit SSH:
@@ -740,7 +740,7 @@ exit
 
 ## Task 13: Access Application in Browser
 
-Open the boardgame application.
+Open the musicvibe application.
 
 
 ### Instructions
@@ -758,7 +758,7 @@ http://<WORKER_NODE_PUBLIC_IP>:<NODE_PORT>
 Example: `http://54.123.45.67:32000`
 
 
-**13.3** You should see the Boardgame Database application home page.
+**13.3** You should see the MusicVibe Database application home page.
 
 
 **13.4** Test login functionality:
@@ -797,7 +797,7 @@ Password: duck
 Verify all tasks:
 
 ```
-[ ] Pipeline job created (name: boardgame-cicd)
+[ ] Pipeline job created (name: musicvibe-cicd)
 [ ] GitHub repository configured
 [ ] Jenkinsfile path set to ci-cd/Jenkinsfile
 [ ] First build triggered and completed successfully
@@ -821,8 +821,8 @@ Verify all tasks:
 
 ```
 === Pipeline Details ===
-Job Name: boardgame-cicd
-Repository: https://github.com/temitayocharles/ultimate-pipeline.git
+Job Name: musicvibe-cicd
+Repository: https://github.com/temitayocharles/musicvibe-cicd-project.git
 Branch: main
 Jenkinsfile Path: ci-cd/Jenkinsfile
 Poll SCM: H/5 * * * * (every 5 minutes)
@@ -832,9 +832,9 @@ Status: SUCCESS
 Duration: ~8-12 minutes
 Stages: 11/11 passed
 Maven Artifact: database-0.0.1-SNAPSHOT.jar
-Docker Image: temitayocharles/boardgame:latest
+Docker Image: temitayocharles/musicvibe:latest
 K8s Namespace: webapps
-K8s Deployment: boardgame (2 replicas)
+K8s Deployment: musicvibe (2 replicas)
 
 === Application Access ===
 URL: http://<WORKER_IP>:<NODE_PORT>
@@ -872,7 +872,7 @@ Check console output for Maven errors:
 1. Verify SonarQube is running: `docker ps | grep sonar`
 2. Check SonarQube server configured in Jenkins (Step 6, Task 14)
 3. Verify sonar-token credential is correct
-4. Test connection: `curl http://nexus-sonarqube.ultimate-cicd-devops.local:9000`
+4. Test connection: `curl http://nexus-sonarqube.musicvibe-services.local:9000`
 
 
 **Problem:** Quality Gate fails
@@ -906,7 +906,7 @@ Verify:
 **Solution:**
 1. Verify docker-cred credentials in Jenkins
 2. Log in to Docker Hub and check quota limits
-3. Ensure repository name matches: temitayocharles/boardgame
+3. Ensure repository name matches: temitayocharles/musicvibe
 4. Check console for authentication errors
 
 

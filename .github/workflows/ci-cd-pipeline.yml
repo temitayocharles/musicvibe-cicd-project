@@ -316,7 +316,7 @@ jobs:
       - name: Configure AWS Credentials (OIDC)
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: arn:aws:iam::940482412089:role/ultimate-cicd-devops-github-actions-role
+          role-to-assume: arn:aws:iam::940482412089:role/musicvibe-services-github-actions-role
           role-session-name: GitHubActions-Deploy
           aws-region: ${{ env.AWS_REGION }}
       

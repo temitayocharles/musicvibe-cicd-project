@@ -437,7 +437,7 @@ In AWS Console search bar, type "Cloud Map" and open the service.
 
 
 **You should see:**
-* Namespace: `ultimate-cicd-devops.local`
+* Namespace: `musicvibe-services.local`
 * Services: 5 services registered
 
 
@@ -628,10 +628,10 @@ Prometheus: http://<IP>:9090
 Grafana: http://<IP>:3000
 
 === Service Discovery DNS (internal use) ===
-jenkins-k8s-master.ultimate-cicd-devops.local
-nexus-sonarqube.ultimate-cicd-devops.local
-k8s-worker-1.ultimate-cicd-devops.local
-monitoring.ultimate-cicd-devops.local
+jenkins-k8s-master.musicvibe-services.local
+nexus-sonarqube.musicvibe-services.local
+k8s-worker-1.musicvibe-services.local
+monitoring.musicvibe-services.local
 
 === AWS Account ===
 Account ID: <from aws sts get-caller-identity>

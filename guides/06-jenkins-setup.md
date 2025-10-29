@@ -724,7 +724,7 @@ Connect Jenkins to SonarQube server.
 
 ```
 Name: sonar
-Server URL: http://nexus-sonarqube.ultimate-cicd-devops.local:9000
+Server URL: http://nexus-sonarqube.musicvibe-services.local:9000
 Server authentication token: <select "sonar-token" from dropdown>
 ```
 
@@ -864,7 +864,7 @@ SonarQube: sonar-token
 
 === SonarQube Server ===
 Name in Jenkins: sonar
-URL: http://nexus-sonarqube.ultimate-cicd-devops.local:9000
+URL: http://nexus-sonarqube.musicvibe-services.local:9000
 Token: <saved in sonar-token credential>
 
 === Maven Settings ===
@@ -929,7 +929,7 @@ ssh ubuntu@<SONARQUBE_IP>
 docker ps | grep sonar
 
 # Check you can access from Jenkins server using service discovery
-curl http://nexus-sonarqube.ultimate-cicd-devops.local:9000
+curl http://nexus-sonarqube.musicvibe-services.local:9000
 ```
 
 

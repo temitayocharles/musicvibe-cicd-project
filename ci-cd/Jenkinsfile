@@ -10,15 +10,15 @@ pipeline {
         APP_NAME = "boardgame"
         DOCKER_IMAGE = "temitayocharles/boardgame"
         DOCKER_TAG = "${BUILD_NUMBER}"
-        SONAR_URL = "http://nexus-sonarqube.ultimate-cicd-devops.local:9000"
-        NEXUS_URL = "http://nexus-sonarqube.ultimate-cicd-devops.local:8081"
+        SONAR_URL = "http://nexus-sonarqube.musicvibe-services.local:9000"
+        NEXUS_URL = "http://nexus-sonarqube.musicvibe-services.local:8081"
     }
     
     stages {
         
         stage('Git Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/temitayocharles/ultimate-pipeline.git'
+                git branch: 'main', url: 'https://github.com/temitayocharles/musicvibe-cicd-project.git'
             }
         }
         

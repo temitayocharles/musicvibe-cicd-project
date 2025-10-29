@@ -283,7 +283,7 @@ http://<internal-ip>:8081/repository/maven-releases/
 **For our setup, the correct URL using service discovery is:**
 
 ```
-http://nexus-sonarqube.ultimate-cicd-devops.local:8081/repository/maven-releases/
+http://nexus-sonarqube.musicvibe-services.local:8081/repository/maven-releases/
 ```
 
 
@@ -293,7 +293,7 @@ http://nexus-sonarqube.ultimate-cicd-devops.local:8081/repository/maven-releases
 **6.4** Copy the URL:
 
 ```
-http://nexus-sonarqube.ultimate-cicd-devops.local:8081/repository/maven-snapshots/
+http://nexus-sonarqube.musicvibe-services.local:8081/repository/maven-snapshots/
 ```
 
 
@@ -334,7 +334,7 @@ ssh -i k8s-pipeline-key.pem ubuntu@<JENKINS_MASTER_PUBLIC_IP>
 **7.3** Test DNS resolution:
 
 ```bash
-ping -c 3 nexus-sonarqube.ultimate-cicd-devops.local
+ping -c 3 nexus-sonarqube.musicvibe-services.local
 ```
 
 
@@ -344,7 +344,7 @@ ping -c 3 nexus-sonarqube.ultimate-cicd-devops.local
 **7.4** Test HTTP connection to Nexus:
 
 ```bash
-curl -I http://nexus-sonarqube.ultimate-cicd-devops.local:8081
+curl -I http://nexus-sonarqube.musicvibe-services.local:8081
 ```
 
 
@@ -361,7 +361,7 @@ Server: Nexus/3.x
 
 ```bash
 curl -u admin:admin123 \
-  http://nexus-sonarqube.ultimate-cicd-devops.local:8081/service/rest/v1/status
+  http://nexus-sonarqube.musicvibe-services.local:8081/service/rest/v1/status
 ```
 
 
@@ -478,8 +478,8 @@ Username: admin
 Password: admin123
 
 === Repository URLs ===
-Releases: http://nexus-sonarqube.ultimate-cicd-devops.local:8081/repository/maven-releases/
-Snapshots: http://nexus-sonarqube.ultimate-cicd-devops.local:8081/repository/maven-snapshots/
+Releases: http://nexus-sonarqube.musicvibe-services.local:8081/repository/maven-releases/
+Snapshots: http://nexus-sonarqube.musicvibe-services.local:8081/repository/maven-snapshots/
 
 === Repository Policies ===
 maven-releases: Disable redeploy (immutable)
@@ -543,7 +543,7 @@ docker exec nexus ls -la /nexus-data/admin.password
 ```bash
 # Verify service discovery from Jenkins server
 ssh ubuntu@<JENKINS_IP>
-curl http://nexus-sonarqube.ultimate-cicd-devops.local:8081
+curl http://nexus-sonarqube.musicvibe-services.local:8081
 
 # Check credentials in Jenkins global-settings match Nexus
 # Username: admin

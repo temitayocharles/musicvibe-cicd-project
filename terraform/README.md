@@ -117,10 +117,10 @@ AWS Cloud Map provides DNS-based service discovery:
 
 ```bash
 # Internal DNS names (accessible from any EC2 instance)
-jenkins-k8s-master.ultimate-cicd-devops.local
-nexus-sonarqube.ultimate-cicd-devops.local
-k8s-worker-1.ultimate-cicd-devops.local
-monitoring.ultimate-cicd-devops.local
+jenkins-k8s-master.musicvibe-services.local
+nexus-sonarqube.musicvibe-services.local
+k8s-worker-1.musicvibe-services.local
+monitoring.musicvibe-services.local
 ```
 
 **Benefits:**
@@ -281,7 +281,7 @@ terraform output ssh_commands
 
 **Verify from any EC2 instance:**
 ```bash
-nslookup jenkins-k8s-master.ultimate-cicd-devops.local
+nslookup jenkins-k8s-master.musicvibe-services.local
 ```
 
 **Should resolve to private IP (172.31.x.x)**

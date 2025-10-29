@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MusicVibe - Your Music Collection</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <span class="logo-icon">🎵</span>
+                <h1>MusicVibe</h1>
+            </div>
+            <nav class="nav">
+                <button class="nav-btn active" data-view="songs">All Songs</button>
+                <button class="nav-btn" data-view="playlists">Playlists</button>
+                <button class="nav-btn" data-view="favorites">Favorites</button>
+                <button class="nav-btn" data-view="discover">🌍 Discover</button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Welcome Banner -->
+    <div class="welcome-banner">
+        <div class="container">
+            <h2 class="welcome-title">🎶 Welcome to MusicVibe</h2>
+            <p class="welcome-text">Your personalized music experience</p>
+            <p class="creator-tag">✨ Crafted with passion by <strong>Temitayo Charles Akinniranye</strong></p>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="main">
+        <div class="container">
+            <!-- Stats Bar -->
+            <div class="stats">
+                <div class="stat-card">
+                    <span class="stat-icon">🎵</span>
+                    <div>
+                        <h3 id="total-songs">0</h3>
+                        <p>Total Songs</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-icon">📝</span>
+                    <div>
+                        <h3 id="total-playlists">0</h3>
+                        <p>Playlists</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-icon">❤️</span>
+                    <div>
+                        <h3 id="total-favorites">0</h3>
+                        <p>Favorites</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Search and Filter -->
+            <div class="controls">
+                <div class="search-box">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" id="search-input" placeholder="Search songs, artists, albums...">
+                </div>
+                <select id="genre-filter" class="filter-select">
+                    <option value="">All Genres</option>
+                    <option value="Pop">Pop</option>
+                    <option value="Rock">Rock</option>
+                    <option value="Hip-Hop">Hip-Hop</option>
+                    <option value="Classical">Classical</option>
+                    <option value="Ambient">Ambient</option>
+                </select>
+            </div>
+
+            <!-- Songs View -->
+            <div id="songs-view" class="view active">
+                <h2 class="section-title">All Songs</h2>
+                <div id="songs-grid" class="songs-grid">
+                    <!-- Songs will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Playlists View -->
+            <div id="playlists-view" class="view">
+                <h2 class="section-title">My Playlists</h2>
+                <div id="playlists-grid" class="playlists-grid">
+                    <!-- Playlists will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Favorites View -->
+            <div id="favorites-view" class="view">
+                <h2 class="section-title">Favorite Songs</h2>
+                <div id="favorites-grid" class="songs-grid">
+                    <!-- Favorite songs will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Discover View -->
+            <div id="discover-view" class="view">
+                <h2 class="section-title">🌍 Discover Music Worldwide</h2>
+                <div class="discover-search">
+                    <input type="text" id="global-search-input" placeholder="Search for any song or artist globally..." class="global-search-input">
+                    <button id="global-search-btn" class="global-search-btn">🔍 Search Globally</button>
+                </div>
+                <div id="discover-results" class="songs-grid">
+                    <p class="discover-placeholder">Search for songs and artists from around the world! 🎵<br><small style="opacity: 0.8; margin-top: 10px; display: block;">Powered by iTunes Search API - No API key required!</small></p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p class="footer-text">© 2025 MusicVibe - A creation by <strong>Temitayo Charles Akinniranye</strong></p>
+            <p class="footer-subtext">Bringing good vibes through music 🎵✨</p>
+        </div>
+    </footer>
+
+    <!-- Loading Spinner -->
+    <div id="loading" class="loading hidden">
+        <div class="spinner"></div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

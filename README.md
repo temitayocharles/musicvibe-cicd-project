@@ -1,8 +1,8 @@
-# Ultimate CI/CD DevOps Pipeline
+# MusicVibe CI/CD Platform
 
-A complete production-grade CI/CD pipeline for deploying a Java Spring Boot application on AWS using Jenkins, Kubernetes, Docker, SonarQube, Nexus, and comprehensive monitoring.
+A complete production-grade CI/CD platform for deploying the MusicVibe application on AWS using Jenkins, Kubernetes, Docker, SonarQube, Nexus, and comprehensive monitoring.
 
-**Status:** Tested and Working | **Last Updated:** October 25, 2025
+**Status:** Tested and Working | **Last Updated:** October 29, 2025
 
 
 ## Table of Contents
@@ -168,11 +168,11 @@ guides/
 Internal DNS names via AWS Cloud Map:
 
 ```
-jenkins-k8s-master.ultimate-cicd-devops.local
-k8s-worker-1.ultimate-cicd-devops.local
-k8s-worker-2.ultimate-cicd-devops.local
-nexus-sonarqube.ultimate-cicd-devops.local
-prometheus-grafana.ultimate-cicd-devops.local
+jenkins-k8s-master.musicvibe-services.local
+k8s-worker-1.musicvibe-services.local
+k8s-worker-2.musicvibe-services.local
+nexus-sonarqube.musicvibe-services.local
+prometheus-grafana.musicvibe-services.local
 ```
 
 ### Network Architecture
@@ -187,18 +187,26 @@ prometheus-grafana.ultimate-cicd-devops.local
 
 ```
 .
-├── app/                          # Java Spring Boot Application
+├── backend/                      # MusicVibe Spring Boot Application
 │   ├── src/                      # Application source code
-│   ├── pom.xml                   # Maven configuration (Java 17)
+│   ├── pom.xml                   # Maven configuration (Java 21)
 │   ├── Dockerfile                # Container image definition
 │   └── mvnw*                     # Maven wrapper
+│
+├── frontend/                     # Frontend source (gets packaged into backend)
+│   ├── index.html                # Single-page application
+│   ├── styles.css                # Modern gradient styling
+│   └── app.js                    # Frontend logic
+│
+├── app-boardgame-backup/         # Legacy boardgame app (for reference)
 │
 ├── ci-cd/                        # CI/CD Configuration
 │   ├── Jenkinsfile               # 11-stage pipeline definition
 │   └── sonar-project.properties  # SonarQube analysis config
 │
 ├── kubernetes/                   # Kubernetes Manifests
-│   └── deployment-service.yaml   # Deployment & LoadBalancer service
+│   ├── deployment-service.yaml   # Legacy boardgame deployment
+│   └── musicvibe-deployment.yaml # MusicVibe deployment
 │
 ├── terraform/                    # Infrastructure as Code
 │   ├── main.tf                   # EC2 instances
@@ -237,34 +245,61 @@ prometheus-grafana.ultimate-cicd-devops.local
 
 ## Application
 
-**BoardGame Database Web Application**
+**MusicVibe - Global Music Discovery Platform**
 
-A full-stack Java Spring Boot application for managing board game collections.
+A modern full-stack music discovery application with global search, lyrics, and 30-second previews.
 
 ### Technologies
-- **Backend:** Java 17, Spring Boot 2.5.6, Spring MVC, Spring Security
-- **Frontend:** Thymeleaf, HTML5, CSS, Bootstrap, JavaScript
-- **Database:** H2 (embedded, in-memory)
-- **Build:** Maven 3.6+
-- **Testing:** JUnit
+- **Backend:** Node.js 20, TypeScript 5.5, Fastify 4.28
+- **Frontend:** React 19, Vite 7, TypeScript
+- **External APIs:** iTunes Search API (free), lyrics.ovh API (free)
+- **Validation:** Zod schemas, TypeBox/Fastify validation
+- **Containerization:** Docker multi-stage build
+- **Deployment:** Single container serving API + static frontend
 
 ### Features
-- Board game listing and search
-- User authentication (Spring Security)
-- Role-based access control (User, Manager)
-- Responsive web UI
-- RESTful API
+- Music library management (songs and playlists)
+- Global music search powered by iTunes (no API key required)
+- 30-second music previews with HTML5 audio player
+- Real-time lyrics viewer with modal UI
+- Favorites and play count tracking
+- Responsive glassmorphic UI with purple gradient design
+- RESTful API with comprehensive schema validation
+- Health check endpoint for container orchestration
 
-### Test Credentials
-- User: `bugs` / Password: `bunny` (user role)
-- User: `daffy` / Password: `duck` (manager role)
+### API Endpoints
+- Health: `GET /health`
+- Songs: `GET /api/v1/songs`, `GET /api/v1/songs/:id`
+- Playlists: `GET /api/v1/playlists`, `GET /api/v1/playlists/:id`
+- Search: `GET /api/v1/search/global?q=<query>`
+- Lyrics: `GET /api/v1/lyrics?artist=<name>&title=<song>`
+- Favorites: `POST /api/v1/songs/:id/favorite`, `DELETE /api/v1/songs/:id/favorite`
+
+### Access
+- Application: http://localhost:4000
+- API: http://localhost:4000/api/v1/songs
+- Health: http://localhost:4000/health
+
+### Docker Hub
+Pull the multi-arch image (supports AMD64 and ARM64):
+
+```bash
+docker pull temitayocharles/musicvibe:v1.0
+docker run -d -p 4000:4000 temitayocharles/musicvibe:v1.0
+```
 
 ### Local Development
 
 ```bash
-cd app/
-./mvnw spring-boot:run
-# Access http://localhost:8080
+# Backend
+cd apps/api/
+npm install
+npm run dev
+
+# Frontend (separate terminal)
+cd apps/frontend/
+npm install
+npm run dev
 ```
 
 
@@ -461,15 +496,16 @@ This project is for educational and demonstration purposes.
 
 ## Acknowledgments
 
-- Original boardgame application structure
-- Enhanced with production-grade infrastructure
+- Enhanced with production-grade infrastructure  
 - Service discovery and OIDC integration
 - Complete automation and monitoring
+- **MusicVibe application:** Modern music management with free APIs (no authentication required)
+- **Built by:** Temitayo Charles Akinniranye
 
 
 ## Repository
 
-**GitHub:** [temitayocharles/ultimate-pipeline](https://github.com/temitayocharles/ultimate-pipeline)
+**GitHub:** [temitayocharles/musicvibe-cicd-project](https://github.com/temitayocharles/musicvibe-cicd-project)
 
 
 ---

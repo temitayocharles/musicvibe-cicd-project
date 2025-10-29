@@ -12,16 +12,16 @@ All EC2 instances are automatically registered in AWS Cloud Map, creating DNS-ba
 
 **DNS Endpoints (accessible within VPC):**
 ```
-jenkins-k8s-master.ultimate-cicd-devops.local
-k8s-worker-1.ultimate-cicd-devops.local
-k8s-worker-2.ultimate-cicd-devops.local (if enabled)
-tools.ultimate-cicd-devops.local (Nexus/SonarQube - if enabled)
-monitoring.ultimate-cicd-devops.local (Prometheus/Grafana - if enabled)
+jenkins-k8s-master.musicvibe-services.local
+k8s-worker-1.musicvibe-services.local
+k8s-worker-2.musicvibe-services.local (if enabled)
+tools.musicvibe-services.local (Nexus/SonarQube - if enabled)
+monitoring.musicvibe-services.local (Prometheus/Grafana - if enabled)
 ```
 
 **Example Usage:**
-- Prometheus can scrape metrics from: `http://jenkins-k8s-master.ultimate-cicd-devops.local:9100/metrics`
-- Jenkins can access Nexus at: `http://tools.ultimate-cicd-devops.local:8081`
+- Prometheus can scrape metrics from: `http://jenkins-k8s-master.musicvibe-services.local:9100/metrics`
+- Jenkins can access Nexus at: `http://tools.musicvibe-services.local:8081`
 - No need to update when instances are recreated
 
 ## OIDC Authentication (No Secrets!)

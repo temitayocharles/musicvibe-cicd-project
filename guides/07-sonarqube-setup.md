@@ -151,7 +151,7 @@ http://<JENKINS_MASTER_PUBLIC_IP>:8080
 
 ```
 Name: sonar
-Server URL: http://nexus-sonarqube.ultimate-cicd-devops.local:9000
+Server URL: http://nexus-sonarqube.musicvibe-services.local:9000
 Server authentication token: sonar-token
 ```
 
@@ -248,14 +248,14 @@ ssh -i k8s-pipeline-key.pem ubuntu@<JENKINS_MASTER_PUBLIC_IP>
 **5.2** Test DNS resolution:
 
 ```bash
-ping -c 3 nexus-sonarqube.ultimate-cicd-devops.local
+ping -c 3 nexus-sonarqube.musicvibe-services.local
 ```
 
 
 **Expected output:**
 
 ```
-PING nexus-sonarqube.ultimate-cicd-devops.local (10.x.x.x) 56(84) bytes of data.
+PING nexus-sonarqube.musicvibe-services.local (10.x.x.x) 56(84) bytes of data.
 64 bytes from ip-10-x-x-x: icmp_seq=1 ttl=64 time=0.5 ms
 64 bytes from ip-10-x-x-x: icmp_seq=2 ttl=64 time=0.4 ms
 64 bytes from ip-10-x-x-x: icmp_seq=3 ttl=64 time=0.3 ms
@@ -265,7 +265,7 @@ PING nexus-sonarqube.ultimate-cicd-devops.local (10.x.x.x) 56(84) bytes of data.
 **5.3** Test HTTP connection:
 
 ```bash
-curl -I http://nexus-sonarqube.ultimate-cicd-devops.local:9000
+curl -I http://nexus-sonarqube.musicvibe-services.local:9000
 ```
 
 
@@ -327,7 +327,7 @@ Password: <your new password>
 Token Name: jenkins-token
 Token ID in Jenkins: sonar-token
 Server Name in Jenkins: sonar
-Server URL: http://nexus-sonarqube.ultimate-cicd-devops.local:9000
+Server URL: http://nexus-sonarqube.musicvibe-services.local:9000
 
 === Quality Gate ===
 Default: Sonar way

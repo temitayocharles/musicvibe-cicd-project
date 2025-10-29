@@ -178,17 +178,17 @@ Test AWS Cloud Map service discovery.
 
 ```bash
 # Jenkins Master
-ping -c 2 jenkins-k8s-master.ultimate-cicd-devops.local
+ping -c 2 jenkins-k8s-master.musicvibe-services.local
 
 # Workers
-ping -c 2 k8s-worker-1.ultimate-cicd-devops.local
-ping -c 2 k8s-worker-2.ultimate-cicd-devops.local
+ping -c 2 k8s-worker-1.musicvibe-services.local
+ping -c 2 k8s-worker-2.musicvibe-services.local
 
 # Nexus/SonarQube
-ping -c 2 nexus-sonarqube.ultimate-cicd-devops.local
+ping -c 2 nexus-sonarqube.musicvibe-services.local
 
 # Prometheus/Grafana
-ping -c 2 prometheus-grafana.ultimate-cicd-devops.local
+ping -c 2 prometheus-grafana.musicvibe-services.local
 ```
 
 
@@ -199,16 +199,16 @@ ping -c 2 prometheus-grafana.ultimate-cicd-devops.local
 
 ```bash
 # SonarQube
-curl -I http://nexus-sonarqube.ultimate-cicd-devops.local:9000
+curl -I http://nexus-sonarqube.musicvibe-services.local:9000
 
 # Nexus
-curl -I http://nexus-sonarqube.ultimate-cicd-devops.local:8081
+curl -I http://nexus-sonarqube.musicvibe-services.local:8081
 
 # Prometheus
-curl -I http://prometheus-grafana.ultimate-cicd-devops.local:9090
+curl -I http://prometheus-grafana.musicvibe-services.local:9090
 
 # Grafana
-curl -I http://prometheus-grafana.ultimate-cicd-devops.local:3000
+curl -I http://prometheus-grafana.musicvibe-services.local:3000
 ```
 
 

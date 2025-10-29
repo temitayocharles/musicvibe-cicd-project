@@ -167,7 +167,7 @@ oidc_config = {
 ```hcl
 oidc_config = {
   github_org         = "temitayocharles"
-  github_repo        = "ultimate-pipeline"
+  github_repo        = "musicvibe-cicd-project"
   enable_github_oidc = true
 }
 ```
@@ -303,8 +303,8 @@ git remote -v
 
 **Expected output:**
 ```
-origin  https://github.com/temitayocharles/ultimate-pipeline.git (fetch)
-origin  https://github.com/temitayocharles/ultimate-pipeline.git (push)
+origin  https://github.com/temitayocharles/musicvibe-cicd-project.git (fetch)
+origin  https://github.com/temitayocharles/musicvibe-cicd-project.git (push)
 ```
 
 
@@ -390,7 +390,7 @@ var.project_config.name
 
 **Expected output:**
 ```
-"ultimate-cicd-devops"
+"musicvibe-services"
 ```
 
 
