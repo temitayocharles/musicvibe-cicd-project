@@ -1,14 +1,26 @@
 # Step 7: SonarQube Configuration
 
+<br>
+
 **Duration:** 10-15 minutes
 
 **Goal:** Complete SonarQube setup and verify integration with Jenkins
 
+<br>
+
+**Note:** SonarQube was automatically installed by Terraform as a Docker container on the Nexus/SonarQube instance.
+
+<br>
 
 ---
 
+<br>
 
 ## What You Will Do
+
+<br>
+
+<br>
 
 * Log in to SonarQube
 * Change default password
@@ -19,11 +31,22 @@
 
 ---
 
+<br>
+
+
 
 ## Task 1: Access SonarQube
 
+<br>
+
+<br>
+
 Log in to SonarQube for the first time.
 
+
+<br>
+
+<br>
 
 ### Instructions
 
@@ -63,6 +86,10 @@ Confirm password: <same password>
 **1.6** Click "Update".
 
 
+<br>
+
+<br>
+
 ### Verification
 
 **You should see:** SonarQube dashboard with "Welcome" message.
@@ -70,11 +97,22 @@ Confirm password: <same password>
 
 ---
 
+<br>
+
+
 
 ## Task 2: Generate Authentication Token for Jenkins
 
+<br>
+
+<br>
+
 Create a token that Jenkins will use to communicate with SonarQube.
 
+
+<br>
+
+<br>
 
 ### Instructions
 
@@ -121,6 +159,10 @@ squ_a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0
 **2.9** After copying, click **Done**.
 
 
+<br>
+
+<br>
+
 ### Verification
 
 **You should see:** In the **Tokens** section, a new token listed:
@@ -135,11 +177,22 @@ Last Use: Never
 
 ---
 
+<br>
+
+
 
 ## Task 3: Add SonarQube Token to Jenkins
 
+<br>
+
+<br>
+
 Now add the token you just created to Jenkins credentials.
 
+
+<br>
+
+<br>
 
 ### Instructions
 
@@ -180,6 +233,10 @@ Description: SonarQube authentication token
 **3.7** Click **Create**.
 
 
+<br>
+
+<br>
+
 ### Verification
 
 **You should see:** "sonar-token" credential listed in the global credentials list.
@@ -187,11 +244,22 @@ Description: SonarQube authentication token
 
 ---
 
+<br>
+
+
 
 ## Task 4: Test SonarQube Connection from Jenkins
 
+<br>
+
+<br>
+
 Verify Jenkins can communicate with SonarQube.
 
+
+<br>
+
+<br>
 
 ### Instructions
 
@@ -231,6 +299,10 @@ Server authentication token: sonar-token
 Don't worry, we'll verify the connection when we run the pipeline in Step 9.
 
 
+<br>
+
+<br>
+
 ### Verification
 
 **SonarQube server is configured in Jenkins** and ready to analyze code.
@@ -238,11 +310,22 @@ Don't worry, we'll verify the connection when we run the pipeline in Step 9.
 
 ---
 
+<br>
+
+
 
 ## Task 5: Review Default Quality Gate (Optional)
 
+<br>
+
+<br>
+
 Understand SonarQube quality standards.
 
+
+<br>
+
+<br>
 
 ### Instructions
 
@@ -287,6 +370,10 @@ Your code will be analyzed against these standards. If any condition fails, the 
 **Note:** This step is optional. The default "Sonar way" quality gate is fine for learning.
 
 
+<br>
+
+<br>
+
 ### Verification
 
 **You understand:** SonarQube will analyze your code and enforce quality standards.
@@ -294,11 +381,22 @@ Your code will be analyzed against these standards. If any condition fails, the 
 
 ---
 
+<br>
+
+
 
 ## Task 6: Verify Service Discovery DNS (Advanced)
 
+<br>
+
+<br>
+
 Confirm SonarQube is accessible via service discovery name.
 
+
+<br>
+
+<br>
 
 ### Instructions
 
@@ -350,6 +448,10 @@ exit
 ```
 
 
+<br>
+
+<br>
+
 ### Verification
 
 **Service discovery DNS is working** and Jenkins can reach SonarQube using the internal DNS name.
@@ -357,8 +459,15 @@ exit
 
 ---
 
+<br>
+
+
 
 ## Checklist: SonarQube Setup Complete
+
+<br>
+
+<br>
 
 Verify all tasks before proceeding:
 
@@ -376,8 +485,15 @@ Verify all tasks before proceeding:
 
 ---
 
+<br>
+
+
 
 ## Important Information to Record
+
+<br>
+
+<br>
 
 **Add to your notes:**
 
@@ -401,8 +517,15 @@ Custom: <if you created one>
 
 ---
 
+<br>
+
+
 
 ## Troubleshooting
+
+<br>
+
+<br>
 
 **Problem:** Cannot access SonarQube at port 9000
 
@@ -456,8 +579,15 @@ aws servicediscovery list-instances \
 
 ---
 
+<br>
+
+
 
 ## Next Steps
+
+<br>
+
+<br>
 
 Proceed to **Step 8: Nexus Configuration** (`08-nexus-setup.md`)
 
@@ -465,6 +595,9 @@ You will set up Nexus repository for Maven artifacts.
 
 
 ---
+
+<br>
+
 
 
 **Completion Time:** You should have spent 10-15 minutes on SonarQube setup.

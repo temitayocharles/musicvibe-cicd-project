@@ -1,17 +1,29 @@
-# Step 6: Jenkins Setup and Configuration
+# Step 6: Jenkins Configuration
+
+<br>
 
 **Duration:** 30-40 minutes (most detailed step)
 
-**Goal:** Install and configure Jenkins with all required plugins, tools, and credentials
+**Goal:** Configure Jenkins with plugins, tools, and credentials for CI/CD pipeline
 
+<br>
 
 **Note:** This is the longest step because Jenkins has many settings. Take your time and follow carefully.
 
+<br>
 
 ---
 
+<br>
 
-## What You Will Do
+
+<br>
+
+## What You Will Configure
+
+<br>
+
+<br>
 
 * Install Jenkins on the master node
 * Install Docker and Trivy for security scanning
@@ -25,11 +37,22 @@
 
 ---
 
+<br>
+
+
 
 ## Task 1: Install Jenkins on Master Node
 
+<br>
+
+<br>
+
 Jenkins was automatically installed by Terraform, but let's verify and understand the installation.
 
+
+<br>
+
+<br>
 
 ### Instructions
 
@@ -43,27 +66,87 @@ ssh -i k8s-pipeline-key.pem ubuntu@<JENKINS_MASTER_PUBLIC_IP>
 Replace `<JENKINS_MASTER_PUBLIC_IP>` with the IP from your terraform outputs.
 
 
-**1.2** Verify Jenkins is running:
+**1.2** Check if Jenkins is installed and running:
 
 ```bash
 sudo systemctl status jenkins
 ```
 
+<br>
 
 **Expected output:**
+
 ```
 ● jenkins.service - Jenkins Continuous Integration Server
      Loaded: loaded (/lib/systemd/system/jenkins.service; enabled; vendor preset: enabled)
-     Active: active (running) since...
+     Active: active (running) since ...
 ```
 
-Press `q` to exit.
+**You should see:** `Active: active (running)` in green text.
+
+<br>
+
+**1.3** Check Jenkins version:
+
+```bash
+jenkins --version
+```
+
+<br>
+
+**Expected output:**
+
+```
+2.4xx.x
+```
+
+<br>
+
+---
+
+<br>
+
+
+<br>
+
+<br>
+
+<br>
+
+### ⚠️ If Jenkins is NOT Installed (Manual Installation Steps)
+
+<br>
+
+**If the above commands fail, Jenkins was not installed by Terraform. Install it manually:**
+
+<br>
+
+```bash
+vi install_jenkins.sh
+```
+
+<br>
+
+**1.5** Press `i` to enter insert mode, then paste this complete script:
 
 
 **1.3** Verify Docker is installed:
 
 ```bash
 docker --version
+```
+
+<br>
+
+**Expected output:**
+
+```
+Docker version 24.x.x, build xxxxx
+```
+
+<br>
+
+**2.2** Check if Trivy is installed:
 ```
 
 
@@ -82,55 +165,189 @@ trivy --version
 
 **Expected output:**
 ```
-Version: 0.x.x
+trivy --version
 ```
 
+<br>
 
-### Verification
+**Expected output:**
 
-All three tools (Jenkins, Docker, Trivy) should be installed and Jenkins should be running.
+```
+Version: 0.xx.x
+```
+
+<br>
+
+---
+
+<br>
 
 
-**Note:** If you need to manually install Jenkins on a fresh Ubuntu machine, you would create this script:
+<br>
+
+<br>
+
+<br>
+
+### ⚠️ If Docker or Trivy is NOT Installed (Manual Installation Steps)
+
+<br>
 
 <details>
-<summary>Click to see manual installation script (for reference only)</summary>
+<summary><b>Click here to see manual Docker installation steps (only if needed)</b></summary>
+
+<br>
+
+**2.3** Create Docker installation script:
+
+```bash
+vi install_docker.sh
+```
+
+<br>
+
+**2.4** Press `i` for insert mode, paste this complete script:
 
 ```bash
 #!/bin/bash
-# Install OpenJDK 17 JRE Headless
-sudo apt install openjdk-17-jre-headless -y
+# Update package manager repositories
+sudo apt-get update
 
-# Download Jenkins GPG key
-sudo wget -O /usr/share/keyrings/jenkins-keyring.asc \
-  https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key
+# Install necessary dependencies
+sudo apt-get install -y ca-certificates curl
 
-# Add Jenkins repository to package manager sources
-echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] \
-  https://pkg.jenkins.io/debian-stable binary/ | sudo tee \
-  /etc/apt/sources.list.d/jenkins.list > /dev/null
+# Create directory for Docker GPG key
+sudo install -m 0755 -d /etc/apt/keyrings
+
+# Download Docker's GPG key
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+
+# Ensure proper permissions for the key
+sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+# Add Docker repository to Apt sources
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+$(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 
 # Update package manager repositories
 sudo apt-get update
 
-# Install Jenkins
-sudo apt-get install jenkins -y
+# Install Docker
+sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 ```
 
-Save as `install_jenkins.sh`, make executable with `chmod +x install_jenkins.sh`, then run with `./install_jenkins.sh`.
+<br>
 
-**Terraform already did this for you**, so no action needed.
+**2.5** Save: Press `ESC`, type `:wq`, press `Enter`
+
+<br>
+
+**2.6** Make executable and run:
+
+```bash
+chmod +x install_docker.sh
+./install_docker.sh
+```
+
+<br>
+
+**2.7** Add Jenkins user to docker group:
+
+```bash
+sudo usermod -aG docker jenkins
+sudo systemctl restart jenkins
+```
 
 </details>
 
+<br>
+
+<details>
+<summary><b>Click here to see manual Trivy installation steps (only if needed)</b></summary>
+
+<br>
+
+**2.8** Create Trivy installation script:
+
+```bash
+vi install_trivy.sh
+```
+
+<br>
+
+**2.9** Press `i` for insert mode, paste this complete script:
+
+```bash
+#!/bin/bash
+sudo apt-get install wget apt-transport-https gnupg lsb-release -y
+wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | gpg --dearmor | sudo tee /usr/share/keyrings/trivy.gpg > /dev/null
+echo "deb [signed-by=/usr/share/keyrings/trivy.gpg] https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main" | sudo tee -a /etc/apt/sources.list.d/trivy.list
+sudo apt-get update
+sudo apt-get install trivy -y
+```
+
+<br>
+
+**2.10** Save: Press `ESC`, type `:wq`, press `Enter`
+
+<br>
+
+**2.11** Make executable and run:
+
+```bash
+chmod +x install_trivy.sh
+./install_trivy.sh
+```
+
+</details>
+
+<br>
 
 ---
 
+<br>
 
-## Task 2: Access Jenkins and Get Initial Password
+
+<br>
+
+<br>
+
+<br>
+
+### Verification
+
+<br>
+
+**All three tools should be installed and working:**
+
+```bash
+sudo systemctl status jenkins   # Should show "active (running)"
+docker --version                 # Should show Docker version
+trivy --version                  # Should show Trivy version
+```
+
+<br>
+
+---
+
+<br>
+
+
+<br>
+
+## Task 3: Access Jenkins and Get Initial Password
+
+<br>
+
+<br>
 
 Log in to Jenkins for the first time.
 
+
+<br>
+
+<br>
 
 ### Instructions
 
@@ -168,6 +385,10 @@ a771e06575b54f91bc56a42ccdbb2f76
 **2.5** Click "Continue".
 
 
+<br>
+
+<br>
+
 ### Verification
 
 **You should now see:** "Customize Jenkins" page with plugin installation options.
@@ -175,11 +396,22 @@ a771e06575b54f91bc56a42ccdbb2f76
 
 ---
 
+<br>
+
+
 
 ## Task 3: Install Suggested Plugins
 
+<br>
+
+<br>
+
 Install the basic Jenkins plugins.
 
+
+<br>
+
+<br>
 
 ### Instructions
 
@@ -203,6 +435,10 @@ Install the basic Jenkins plugins.
 **Wait for all plugins to complete.** Green checkmarks will appear next to each plugin.
 
 
+<br>
+
+<br>
+
 ### Verification
 
 **When complete, you will see:** "Create First Admin User" page.
@@ -210,11 +446,22 @@ Install the basic Jenkins plugins.
 
 ---
 
+<br>
+
+
 
 ## Task 4: Create Admin User
 
+<br>
+
+<br>
+
 Create your Jenkins administrator account.
 
+
+<br>
+
+<br>
 
 ### Instructions
 
@@ -248,6 +495,10 @@ http://<YOUR_IP>:8080/
 **3.5** Click "Start using Jenkins".
 
 
+<br>
+
+<br>
+
 ### Verification
 
 **You should now see:** Jenkins Dashboard with "Welcome to Jenkins!" message.
@@ -255,11 +506,22 @@ http://<YOUR_IP>:8080/
 
 ---
 
+<br>
+
+
 
 ## Task 5: Install Additional Required Plugins
 
+<br>
+
+<br>
+
 Install 8 more plugins needed for the CI/CD pipeline.
 
+
+<br>
+
+<br>
 
 ### Instructions
 
@@ -339,6 +601,10 @@ Search for: `Kubernetes`
 **4.9** Log in again with your admin credentials.
 
 
+<br>
+
+<br>
+
 ### Verification
 
 **Verify plugins are installed:**
@@ -351,11 +617,22 @@ Search for: `Kubernetes`
 
 ---
 
+<br>
+
+
 
 ## Task 6: Configure Java (JDK 17)
 
+<br>
+
+<br>
+
 Tell Jenkins where to find Java 17.
 
+
+<br>
+
+<br>
 
 ### Instructions
 
@@ -394,6 +671,10 @@ Name: jdk17
 **5.8** Do NOT click Save yet (we have more tools to configure).
 
 
+<br>
+
+<br>
+
 ### Verification
 
 **You should see:** JDK configuration section filled with name "jdk17" and JAVA_HOME path.
@@ -401,11 +682,22 @@ Name: jdk17
 
 ---
 
+<br>
+
+
 
 ## Task 7: Configure Maven
 
+<br>
+
+<br>
+
 Configure Maven build tool.
 
+
+<br>
+
+<br>
 
 ### Instructions
 
@@ -444,6 +736,10 @@ Name: maven3.6
 **6.6** Do NOT click Save yet.
 
 
+<br>
+
+<br>
+
 ### Verification
 
 **You should see:** Maven configuration with name "maven3.6" and version "3.9.6".
@@ -451,11 +747,22 @@ Name: maven3.6
 
 ---
 
+<br>
+
+
 
 ## Task 8: Configure Docker
 
+<br>
+
+<br>
+
 Configure Docker tool for building images.
 
+
+<br>
+
+<br>
 
 ### Instructions
 
@@ -491,6 +798,10 @@ Latest
 **7.6** Do NOT click Save yet.
 
 
+<br>
+
+<br>
+
 ### Verification
 
 **You should see:** Docker configuration with name "docker".
@@ -498,11 +809,22 @@ Latest
 
 ---
 
+<br>
+
+
 
 ## Task 9: Configure SonarQube Scanner
 
+<br>
+
+<br>
+
 Configure SonarQube code analysis tool.
 
+
+<br>
+
+<br>
 
 ### Instructions
 
@@ -538,6 +860,10 @@ SonarQube Scanner 6.2.1.4610
 **8.6** Now click "Save" button (at the bottom of the page).
 
 
+<br>
+
+<br>
+
 ### Verification
 
 **You should see:** Jenkins Dashboard again. All tools are now configured.
@@ -545,11 +871,22 @@ SonarQube Scanner 6.2.1.4610
 
 ---
 
+<br>
+
+
 
 ## Task 10: Add Docker Hub Credentials
 
+<br>
+
+<br>
+
 Add your Docker Hub username and password to Jenkins.
 
+
+<br>
+
+<br>
 
 ### Instructions
 
@@ -583,6 +920,10 @@ Description: Docker Hub Credentials
 **9.6** Click "Create".
 
 
+<br>
+
+<br>
+
 ### Verification
 
 **You should see:** "docker-cred" in the credentials list with description "Docker Hub Credentials".
@@ -590,11 +931,22 @@ Description: Docker Hub Credentials
 
 ---
 
+<br>
+
+
 
 ## Task 11: Add GitHub Credentials
 
+<br>
+
+<br>
+
 Add GitHub personal access token for repository access.
 
+
+<br>
+
+<br>
 
 ### Instructions
 
@@ -627,6 +979,10 @@ Description: GitHub Credentials
 **10.3** Click "Create".
 
 
+<br>
+
+<br>
+
 ### Verification
 
 **You should see:** Both "docker-cred" and "git-cred" in the credentials list.
@@ -634,11 +990,22 @@ Description: GitHub Credentials
 
 ---
 
+<br>
+
+
 
 ## Task 12: Configure Kubernetes Credentials
 
+<br>
+
+<br>
+
 Add Kubernetes config file so Jenkins can deploy to the cluster.
 
+
+<br>
+
+<br>
 
 ### Instructions
 
@@ -683,6 +1050,10 @@ Description: Kubernetes Config
 **11.5** Click "Create".
 
 
+<br>
+
+<br>
+
 ### Verification
 
 **You should see:** "k8-cred" in the credentials list.
@@ -690,11 +1061,22 @@ Description: Kubernetes Config
 
 ---
 
+<br>
+
+
 
 ## Task 13: Get SonarQube Token
 
+<br>
+
+<br>
+
 Generate authentication token from SonarQube.
 
+
+<br>
+
+<br>
 
 ### Instructions
 
@@ -744,6 +1126,10 @@ Expires in: No expiration
 **You cannot see this token again after closing this page!**
 
 
+<br>
+
+<br>
+
 ### Verification
 
 **You should have:** A SonarQube token copied and saved in your notes.
@@ -751,11 +1137,22 @@ Expires in: No expiration
 
 ---
 
+<br>
+
+
 
 ## Task 14: Add SonarQube Token to Jenkins
 
+<br>
+
+<br>
+
 Store the SonarQube token in Jenkins.
 
+
+<br>
+
+<br>
 
 ### Instructions
 
@@ -779,6 +1176,10 @@ Description: SonarQube Authentication Token
 **13.4** Click "Create".
 
 
+<br>
+
+<br>
+
 ### Verification
 
 **You should now have 4 credentials:**
@@ -790,11 +1191,22 @@ Description: SonarQube Authentication Token
 
 ---
 
+<br>
+
+
 
 ## Task 15: Configure SonarQube Server in Jenkins
 
+<br>
+
+<br>
+
 Connect Jenkins to SonarQube server.
 
+
+<br>
+
+<br>
 
 ### Instructions
 
@@ -825,6 +1237,10 @@ Server authentication token: <select "sonar-token" from dropdown>
 **14.6** Click "Save" (at bottom of page).
 
 
+<br>
+
+<br>
+
 ### Verification
 
 **You should see:** Dashboard again. SonarQube is now connected.
@@ -832,11 +1248,22 @@ Server authentication token: <select "sonar-token" from dropdown>
 
 ---
 
+<br>
+
+
 
 ## Task 16: Configure Maven Settings for Nexus
 
+<br>
+
+<br>
+
 Create Maven settings file for artifact deployment.
 
+
+<br>
+
+<br>
 
 ### Instructions
 
@@ -898,6 +1325,10 @@ Comment: Maven settings for Nexus deployment
 **15.7** Click "Save" or "Submit".
 
 
+<br>
+
+<br>
+
 ### Verification
 
 **You should see:** "global-settings" in the list of managed files.
@@ -905,8 +1336,15 @@ Comment: Maven settings for Nexus deployment
 
 ---
 
+<br>
+
+
 
 ## Checklist: Jenkins Configuration Complete
+
+<br>
+
+<br>
 
 Verify all configurations before proceeding:
 
@@ -929,8 +1367,15 @@ Verify all configurations before proceeding:
 
 ---
 
+<br>
+
+
 
 ## Important Information to Record
+
+<br>
+
+<br>
 
 **Add to your notes:**
 
@@ -964,8 +1409,15 @@ Config ID: global-settings
 
 ---
 
+<br>
+
+
 
 ## Troubleshooting
+
+<br>
+
+<br>
 
 **Problem:** Cannot access Jenkins at port 8080
 
@@ -1025,8 +1477,15 @@ curl http://nexus-sonarqube.musicvibe-services.local:9000
 
 ---
 
+<br>
+
+
 
 ## Next Steps
+
+<br>
+
+<br>
 
 Proceed to **Step 7: SonarQube Configuration** (`07-sonarqube-setup.md`)
 
@@ -1034,6 +1493,9 @@ You will complete SonarQube setup and configure quality gates.
 
 
 ---
+
+<br>
+
 
 
 **Completion Time:** If all configurations are correct, you spent 30-40 minutes.

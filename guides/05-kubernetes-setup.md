@@ -7,8 +7,15 @@
 
 ---
 
+<br>
+
+
 
 ## What You Will Accomplish
+
+<br>
+
+<br>
 
 By the end of this step:
 
@@ -20,11 +27,22 @@ By the end of this step:
 
 ---
 
+<br>
+
+
 
 ## Task 1: Initialize Kubernetes Master
 
+<br>
+
+<br>
+
 The master node controls the entire Kubernetes cluster.
 
+
+<br>
+
+<br>
 
 ### Instructions
 
@@ -123,6 +141,10 @@ jenkins-k8s-master   Ready    control-plane   2m    v1.28.1
 **Press Ctrl+C to exit the watch command.**
 
 
+<br>
+
+<br>
+
 ### Verification
 
 **Master is ready when:**
@@ -149,11 +171,22 @@ ls -la ~/.kube/config
 
 ---
 
+<br>
+
+
 
 ## Task 2: Get Worker Join Command
 
+<br>
+
+<br>
+
 Save the command needed to join worker nodes to the cluster.
 
+
+<br>
+
+<br>
 
 ### Instructions
 
@@ -176,6 +209,10 @@ kubeadm join 172.31.21.117:6443 --token abc123.xyz789def456 --discovery-token-ca
 **IMPORTANT:** You will need this exact command in the next task. Copy it carefully.
 
 
+<br>
+
+<br>
+
 ### Verification
 
 **The join command should:**
@@ -187,11 +224,22 @@ kubeadm join 172.31.21.117:6443 --token abc123.xyz789def456 --discovery-token-ca
 
 ---
 
+<br>
+
+
 
 ## Task 3: Join Worker Node 1
 
+<br>
+
+<br>
+
 Connect the first worker node to the cluster.
 
+
+<br>
+
+<br>
 
 ### Instructions
 
@@ -253,6 +301,10 @@ Run 'kubectl get nodes' on the control-plane to see this node join the cluster.
 **3.5** The message "This node has joined the cluster" confirms success.
 
 
+<br>
+
+<br>
+
 ### Verification
 
 **Switch back to the master terminal and verify:**
@@ -275,11 +327,22 @@ k8s-worker-1         Ready    <none>          30s     v1.28.1
 
 ---
 
+<br>
+
+
 
 ## Task 4: Join Worker Node 2
 
+<br>
+
+<br>
+
 Add the second worker node to the cluster.
 
+
+<br>
+
+<br>
 
 ### Instructions
 
@@ -317,6 +380,10 @@ sudo kubeadm join 172.31.21.117:6443 --token abc123.xyz789def456 --discovery-tok
 **Expected output:** Same as Worker 1 - should end with "This node has joined the cluster"
 
 
+<br>
+
+<br>
+
 ### Verification
 
 **Switch to master terminal and verify:**
@@ -340,11 +407,22 @@ k8s-worker-2         Ready    <none>          30s     v1.28.1
 
 ---
 
+<br>
+
+
 
 ## Task 5: Verify Cluster Health
 
+<br>
+
+<br>
+
 Ensure all Kubernetes system components are running correctly.
 
+
+<br>
+
+<br>
 
 ### Instructions
 
@@ -433,6 +511,10 @@ etcd-0               Healthy   ok
 The warning is normal for Kubernetes 1.28. All components should show "Healthy".
 
 
+<br>
+
+<br>
+
 ### Verification
 
 **Cluster is healthy when:**
@@ -448,11 +530,22 @@ The warning is normal for Kubernetes 1.28. All components should show "Healthy".
 
 ---
 
+<br>
+
+
 
 ## Task 6: Create Application Namespace
 
+<br>
+
+<br>
+
 Create a dedicated namespace for application deployments.
 
+
+<br>
+
+<br>
 
 ### Instructions
 
@@ -513,6 +606,10 @@ kubectl config view --minify | grep namespace:
 ```
 
 
+<br>
+
+<br>
+
 ### Verification
 
 **Namespace is ready when:**
@@ -522,11 +619,22 @@ kubectl config view --minify | grep namespace:
 
 ---
 
+<br>
+
+
 
 ## Task 7: Test Cluster with Sample Deployment
 
+<br>
+
+<br>
+
 Deploy a test pod to verify cluster functionality.
 
+
+<br>
+
+<br>
 
 ### Instructions
 
@@ -587,6 +695,10 @@ deployment.apps "nginx-test" deleted
 ```
 
 
+<br>
+
+<br>
+
 ### Verification
 
 **Test successful if:**
@@ -597,8 +709,15 @@ deployment.apps "nginx-test" deleted
 
 ---
 
+<br>
+
+
 
 ## Important Information to Record
+
+<br>
+
+<br>
 
 **Add to your notes:**
 
@@ -620,8 +739,15 @@ Pod Network CIDR: 10.244.0.0/16
 
 ---
 
+<br>
+
+
 
 ## Troubleshooting
+
+<br>
+
+<br>
 
 **Problem:** Master node stuck in NotReady state
 
@@ -683,11 +809,22 @@ kubectl rollout restart deployment coredns -n kube-system
 
 ---
 
+<br>
+
+
 
 ## Task 6: Create Kubernetes Deployment Manifest
 
+<br>
+
+<br>
+
 Create the deployment configuration file for the MusicVibe application.
 
+
+<br>
+
+<br>
 
 ### Instructions
 
@@ -717,6 +854,9 @@ metadata:
   name: musicvibe
 
 ---
+
+<br>
+
 
 apiVersion: apps/v1
 kind: Deployment
@@ -759,6 +899,9 @@ spec:
             cpu: "500m"
 
 ---
+
+<br>
+
 
 apiVersion: v1
 kind: Service
@@ -812,6 +955,10 @@ cat deployment-service.yaml
 * Then Jenkins will deploy using this manifest
 
 
+<br>
+
+<br>
+
 ### Verification
 
 **You should have:** A file named `deployment-service.yaml` in `/home/ubuntu/` directory.
@@ -819,8 +966,15 @@ cat deployment-service.yaml
 
 ---
 
+<br>
+
+
 
 ## Checklist: Kubernetes Initialization Complete
+
+<br>
+
+<br>
 
 Verify before proceeding to Step 6:
 
@@ -841,8 +995,15 @@ Verify before proceeding to Step 6:
 
 ---
 
+<br>
+
+
 
 ## Next Steps
+
+<br>
+
+<br>
 
 Proceed to **Step 6: Jenkins Configuration** (`06-jenkins-setup.md`)
 
@@ -853,6 +1014,9 @@ You will configure Jenkins with all required plugins, tools, and credentials.
 
 
 ---
+
+<br>
+
 
 
 **Completion Time:** If all checks passed, you spent approximately 20 minutes.

@@ -7,8 +7,15 @@
 
 ---
 
+<br>
+
+
 
 ## What You Will Do
+
+<br>
+
+<br>
 
 * Create a new Pipeline job in Jenkins
 * Configure GitHub repository connection
@@ -20,11 +27,22 @@
 
 ---
 
+<br>
+
+
 
 ## Task 1: Create New Pipeline Job
 
+<br>
+
+<br>
+
 Set up a new Jenkins pipeline project.
 
+
+<br>
+
+<br>
 
 ### Instructions
 
@@ -54,6 +72,10 @@ Enter an item name: musicvibe-cicd
 **1.6** Click "OK" at the bottom.
 
 
+<br>
+
+<br>
+
 ### Verification
 
 **You should see:** Pipeline configuration page with multiple tabs (General, Build Triggers, Pipeline, etc.).
@@ -61,11 +83,22 @@ Enter an item name: musicvibe-cicd
 
 ---
 
+<br>
+
+
 
 ## Task 2: Configure Pipeline Description
 
+<br>
+
+<br>
+
 Add a description for the pipeline.
 
+
+<br>
+
+<br>
 
 ### Instructions
 
@@ -83,6 +116,10 @@ Includes: build, test, code analysis, security scan, artifact storage, Docker bu
 **2.3** Do NOT click Save yet (we have more to configure).
 
 
+<br>
+
+<br>
+
 ### Verification
 
 **You see:** Description field filled in.
@@ -90,11 +127,22 @@ Includes: build, test, code analysis, security scan, artifact storage, Docker bu
 
 ---
 
+<br>
+
+
 
 ## Task 3: Configure GitHub Project (Optional)
 
+<br>
+
+<br>
+
 Link the pipeline to your GitHub repository.
 
+
+<br>
+
+<br>
 
 ### Instructions
 
@@ -114,6 +162,10 @@ https://github.com/temitayocharles/musicvibe-cicd-project/
 **3.3** Do NOT click Save yet.
 
 
+<br>
+
+<br>
+
 ### Verification
 
 **You see:** GitHub project URL configured.
@@ -121,11 +173,22 @@ https://github.com/temitayocharles/musicvibe-cicd-project/
 
 ---
 
+<br>
+
+
 
 ## Task 4: Configure Build Triggers
 
+<br>
+
+<br>
+
 Set up automatic builds on code changes.
 
+
+<br>
+
+<br>
 
 ### Instructions
 
@@ -164,6 +227,10 @@ If you prefer to trigger builds manually only, leave all checkboxes unchecked.
 **4.4** Do NOT click Save yet.
 
 
+<br>
+
+<br>
+
 ### Verification
 
 **You see:** "Poll SCM" configured with schedule `H/5 * * * *`.
@@ -171,11 +238,22 @@ If you prefer to trigger builds manually only, leave all checkboxes unchecked.
 
 ---
 
+<br>
+
+
 
 ## Task 5: Verify Jenkinsfile in Repository (Or Create If Building From Scratch)
 
+<br>
+
+<br>
+
 The Jenkinsfile defines all pipeline stages. If you cloned the MusicVibe repository, it already exists. If building from scratch, create it now.
 
+
+<br>
+
+<br>
 
 ### Option A: Repository Already Has Jenkinsfile (Most Users)
 
@@ -183,6 +261,10 @@ The Jenkinsfile defines all pipeline stages. If you cloned the MusicVibe reposit
 
 The Jenkinsfile already exists at `ci-cd/Jenkinsfile`. **Skip to Task 6.**
 
+
+<br>
+
+<br>
 
 ### Option B: Creating Jenkinsfile From Scratch (Advanced)
 
@@ -421,6 +503,10 @@ git push origin main
 ```
 
 
+<br>
+
+<br>
+
 ### Verification
 
 **Option A Users:** Jenkinsfile exists at `ci-cd/Jenkinsfile` in repository.
@@ -430,11 +516,22 @@ git push origin main
 
 ---
 
+<br>
+
+
 
 ## Task 6: Configure Pipeline from SCM
 
+<br>
+
+<br>
+
 Tell Jenkins to use Jenkinsfile from your GitHub repository.
 
+
+<br>
+
+<br>
 
 ### Instructions
 
@@ -505,6 +602,10 @@ ci-cd/Jenkinsfile
 **5.9** Now click "Save" button (bottom of page).
 
 
+<br>
+
+<br>
+
 ### Verification
 
 **You should see:** Pipeline project page with "Build Now" button in left sidebar.
@@ -512,11 +613,22 @@ ci-cd/Jenkinsfile
 
 ---
 
+<br>
+
+
 
 ## Task 7: Trigger First Build
 
+<br>
+
+<br>
+
 Run the pipeline for the first time.
 
+
+<br>
+
+<br>
 
 ### Instructions
 
@@ -557,6 +669,10 @@ Run the pipeline for the first time.
 **Expected duration:** 8-12 minutes for first build (longer because tools need to download dependencies).
 
 
+<br>
+
+<br>
+
 ### Verification
 
 **You should see:** Console output showing each stage executing.
@@ -564,11 +680,22 @@ Run the pipeline for the first time.
 
 ---
 
+<br>
+
+
 
 ## Task 8: Monitor Build Progress
 
+<br>
+
+<br>
+
 Watch the pipeline stages execute.
 
+
+<br>
+
+<br>
 
 ### Instructions
 
@@ -691,6 +818,10 @@ deployment "musicvibe" successfully rolled out
 Duration: ~30 seconds
 
 
+<br>
+
+<br>
+
 ### Verification
 
 **All 11 stages should show green/blue (success).**
@@ -698,11 +829,22 @@ Duration: ~30 seconds
 
 ---
 
+<br>
+
+
 
 ## Task 9: Review Build Results
 
+<br>
+
+<br>
+
 Check that the build completed successfully.
 
+
+<br>
+
+<br>
 
 ### Instructions
 
@@ -731,6 +873,10 @@ Last Stable Build: #1
 ```
 
 
+<br>
+
+<br>
+
 ### Verification
 
 **Build status:** SUCCESS (green checkmark or blue ball).
@@ -738,11 +884,22 @@ Last Stable Build: #1
 
 ---
 
+<br>
+
+
 
 ## Task 10: Verify Artifacts in Nexus
 
+<br>
+
+<br>
+
 Check that artifacts were published to Nexus.
 
+
+<br>
+
+<br>
 
 ### Instructions
 
@@ -783,6 +940,10 @@ database-0.0.1-SNAPSHOT.pom
 **These are your Maven artifacts!**
 
 
+<br>
+
+<br>
+
 ### Verification
 
 **Artifacts exist in Nexus** maven-snapshots repository.
@@ -790,11 +951,22 @@ database-0.0.1-SNAPSHOT.pom
 
 ---
 
+<br>
+
+
 
 ## Task 11: Verify Code Analysis in SonarQube
 
+<br>
+
+<br>
+
 Check code quality analysis results.
 
+
+<br>
+
+<br>
 
 ### Instructions
 
@@ -833,6 +1005,10 @@ Duplications: X%
 **10.6** Click on each metric to see details.
 
 
+<br>
+
+<br>
+
 ### Verification
 
 **SonarQube analyzed the code** and shows quality metrics.
@@ -840,11 +1016,22 @@ Duplications: X%
 
 ---
 
+<br>
+
+
 
 ## Task 12: Verify Docker Image in Docker Hub
 
+<br>
+
+<br>
+
 Check that the image was pushed to Docker Hub.
 
+
+<br>
+
+<br>
 
 ### Instructions
 
@@ -882,6 +1069,10 @@ Last Pushed: <recent timestamp>
 **11.7** Note the image size and digest.
 
 
+<br>
+
+<br>
+
 ### Verification
 
 **Docker image exists** in your Docker Hub repository with tag `latest`.
@@ -889,11 +1080,22 @@ Last Pushed: <recent timestamp>
 
 ---
 
+<br>
+
+
 
 ## Task 13: Verify Deployment in Kubernetes
 
+<br>
+
+<br>
+
 Check that the application is running in Kubernetes.
 
+
+<br>
+
+<br>
 
 ### Instructions
 
@@ -989,6 +1191,10 @@ exit
 ```
 
 
+<br>
+
+<br>
+
 ### Verification
 
 **Application is deployed and running** in Kubernetes with 2 healthy pods.
@@ -996,11 +1202,22 @@ exit
 
 ---
 
+<br>
+
+
 
 ## Task 14: Access Application in Browser
 
+<br>
+
+<br>
+
 Open the musicvibe application.
 
+
+<br>
+
+<br>
 
 ### Instructions
 
@@ -1043,6 +1260,10 @@ Password: duck
 **13.5** Explore the application.
 
 
+<br>
+
+<br>
+
 ### Verification
 
 **Application is accessible** via browser and login works.
@@ -1050,8 +1271,15 @@ Password: duck
 
 ---
 
+<br>
+
+
 
 ## Checklist: Pipeline Setup Complete
+
+<br>
+
+<br>
 
 Verify all tasks:
 
@@ -1073,8 +1301,15 @@ Verify all tasks:
 
 ---
 
+<br>
+
+
 
 ## Important Information to Record
+
+<br>
+
+<br>
 
 **Add to your notes:**
 
@@ -1103,8 +1338,15 @@ Login: bugs/bunny or daffy/duck
 
 ---
 
+<br>
+
+
 
 ## Troubleshooting
+
+<br>
+
+<br>
 
 **Problem:** Build fails at "Git Checkout" stage
 
@@ -1226,8 +1468,15 @@ kubectl describe pod <pod-name> -n webapps
 
 ---
 
+<br>
+
+
 
 ## Next Steps
+
+<br>
+
+<br>
 
 Proceed to **Step 10: Verification and Testing** (`10-verification.md`)
 
@@ -1235,6 +1484,9 @@ You will perform comprehensive testing and create final documentation.
 
 
 ---
+
+<br>
+
 
 
 **Completion Time:** First build: 25-30 minutes. Subsequent builds: 5-8 minutes.

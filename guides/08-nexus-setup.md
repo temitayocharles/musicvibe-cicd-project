@@ -1,14 +1,26 @@
-# Step 8: Nexus Configuration
+# Step 8: Nexus Repository Configuration
 
-**Duration:** 15-20 minutes
+<br>
 
-**Goal:** Configure Nexus Repository Manager for storing Maven artifacts
+**Duration:** 10-15 minutes
 
+**Goal:** Configure Nexus Repository Manager for Maven artifact storage
+
+<br>
+
+**Note:** Nexus was automatically installed by Terraform as a Docker container on the Nexus/SonarQube instance.
+
+<br>
 
 ---
 
+<br>
 
 ## What You Will Do
+
+<br>
+
+<br>
 
 * Access Nexus Repository Manager
 * Get initial admin password
@@ -20,11 +32,22 @@
 
 ---
 
+<br>
+
+
 
 ## Task 1: Access Nexus
 
+<br>
+
+<br>
+
 Log in to Nexus for the first time.
 
+
+<br>
+
+<br>
 
 ### Instructions
 
@@ -44,6 +67,10 @@ http://<NEXUS_SONARQUBE_PUBLIC_IP>:8081
 **1.3** Click "Sign In" (top right corner).
 
 
+<br>
+
+<br>
+
 ### Verification
 
 **You should see:** A login dialog asking for username and password.
@@ -51,11 +78,22 @@ http://<NEXUS_SONARQUBE_PUBLIC_IP>:8081
 
 ---
 
+<br>
+
+
 
 ## Task 2: Get Initial Admin Password
 
+<br>
+
+<br>
+
 Retrieve the default admin password from the server.
 
+
+<br>
+
+<br>
 
 ### Instructions
 
@@ -86,6 +124,10 @@ docker exec nexus cat /nexus-data/admin.password
 **2.4** Keep the SSH session open (we'll need it later).
 
 
+<br>
+
+<br>
+
 ### Verification
 
 **You have:** The initial admin password copied.
@@ -93,11 +135,22 @@ docker exec nexus cat /nexus-data/admin.password
 
 ---
 
+<br>
+
+
 
 ## Task 3: Complete Setup Wizard
 
+<br>
+
+<br>
+
 Configure Nexus for the first time.
 
+
+<br>
+
+<br>
 
 ### Instructions
 
@@ -146,6 +199,10 @@ Confirm password: admin123
 **3.9** Click "Finish".
 
 
+<br>
+
+<br>
+
 ### Verification
 
 **You should see:** Nexus dashboard with repositories listed.
@@ -153,11 +210,22 @@ Confirm password: admin123
 
 ---
 
+<br>
+
+
 
 ## Task 4: Verify Maven Repositories Exist
 
+<br>
+
+<br>
+
 Check that required repositories are already created.
 
+
+<br>
+
+<br>
 
 ### Instructions
 
@@ -194,6 +262,10 @@ nuget.org-proxy        proxy    nuget
 **If they don't exist:** You'll need to create them (see Troubleshooting section).
 
 
+<br>
+
+<br>
+
 ### Verification
 
 **You can see:** `maven-releases` and `maven-snapshots` repositories in the list.
@@ -201,11 +273,22 @@ nuget.org-proxy        proxy    nuget
 
 ---
 
+<br>
+
+
 
 ## Task 5: Enable Redeployment for maven-snapshots Repository
 
+<br>
+
+<br>
+
 Allow overwriting snapshot artifacts during development (as shown in original tutorial).
 
+
+<br>
+
+<br>
 
 ### Instructions
 
@@ -255,6 +338,10 @@ Allow redeploy  ✅
 **5.11** You should see a success message: "Repository updated: maven-snapshots"
 
 
+<br>
+
+<br>
+
 ### Verification
 
 **You should see:** 
@@ -263,11 +350,22 @@ Allow redeploy  ✅
 
 ---
 
+<br>
+
+
 
 ## Task 6: Verify maven-releases Deployment Policy
 
+<br>
+
+<br>
+
 Ensure release artifacts cannot be overwritten (best practice).
 
+
+<br>
+
+<br>
 
 ### Instructions
 
@@ -299,6 +397,10 @@ Deployment policy: Disable redeploy
 **If it's set to "Allow redeploy"**, change it to "Disable redeploy" and click **Save**.
 
 
+<br>
+
+<br>
+
 ### Verification
 
 **Configuration is now:**
@@ -308,11 +410,22 @@ Deployment policy: Disable redeploy
 
 ---
 
+<br>
+
+
 
 ## Task 7: Get Repository URLs
 
+<br>
+
+<br>
+
 Record the URLs needed for Maven configuration.
 
+
+<br>
+
+<br>
 
 ### Instructions
 
@@ -346,6 +459,10 @@ http://nexus-sonarqube.musicvibe-services.local:8081/repository/maven-snapshots/
 **Note:** These URLs are already configured in your `app/pom.xml` file from the compatibility fixes.
 
 
+<br>
+
+<br>
+
 ### Verification
 
 **You have recorded:**
@@ -355,11 +472,22 @@ http://nexus-sonarqube.musicvibe-services.local:8081/repository/maven-snapshots/
 
 ---
 
+<br>
+
+
 
 ## Task 8: Test Nexus Connection from Jenkins Server
 
+<br>
+
+<br>
+
 Verify Jenkins can reach Nexus via service discovery.
 
+
+<br>
+
+<br>
 
 ### Instructions
 
@@ -427,6 +555,10 @@ exit
 ```
 
 
+<br>
+
+<br>
+
 ### Verification
 
 **Jenkins can connect to Nexus** using service discovery DNS and authenticate with admin credentials.
@@ -434,11 +566,22 @@ exit
 
 ---
 
+<br>
+
+
 
 ## Task 8: Verify Maven Settings in Jenkins
 
+<br>
+
+<br>
+
 Confirm Jenkins has correct Nexus credentials.
 
+
+<br>
+
+<br>
 
 ### Instructions
 
@@ -483,6 +626,10 @@ http://<JENKINS_MASTER_PUBLIC_IP>:8080
 3. Click "Save"
 
 
+<br>
+
+<br>
+
 ### Verification
 
 **Jenkins Maven settings** have correct Nexus credentials (admin/admin123).
@@ -490,8 +637,15 @@ http://<JENKINS_MASTER_PUBLIC_IP>:8080
 
 ---
 
+<br>
+
+
 
 ## Checklist: Nexus Setup Complete
+
+<br>
+
+<br>
 
 Verify all configurations:
 
@@ -512,8 +666,15 @@ Verify all configurations:
 
 ---
 
+<br>
+
+
 
 ## Important Information to Record
+
+<br>
+
+<br>
 
 **Add to your notes:**
 
@@ -539,8 +700,15 @@ Repository IDs: maven-releases, maven-snapshots
 
 ---
 
+<br>
+
+
 
 ## Troubleshooting
+
+<br>
+
+<br>
 
 **Problem:** Cannot access Nexus at port 8081
 
@@ -627,8 +795,15 @@ curl http://nexus-sonarqube.musicvibe-services.local:8081
 
 ---
 
+<br>
+
+
 
 ## Next Steps
+
+<br>
+
+<br>
 
 Proceed to **Step 9: Create and Run Pipeline** (`09-pipeline-setup.md`)
 
@@ -636,6 +811,9 @@ You will create the Jenkins pipeline job and run your first build!
 
 
 ---
+
+<br>
+
 
 
 **Completion Time:** You should have spent 15-20 minutes on Nexus setup.
