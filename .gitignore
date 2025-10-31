@@ -26,6 +26,10 @@ terraform.rc
 
 # Logs
 *.log
+trivy-*.html
+trivy-*.log
+*-build.log
+*-typecheck.log
 
 # Backup files
 *.backup

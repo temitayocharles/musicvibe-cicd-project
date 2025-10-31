@@ -103,7 +103,7 @@ async function retryableHealthCheck() {
       const result = await makeRequest(parsedUrl, i);
       
       if (result.statusCode === 200) {
-        log('\n✓ SUCCESS: Application is healthy!', colors.green);
+        log('\n SUCCESS: Application is healthy!', colors.green);
         log('\nHealth Check Response:', colors.cyan);
         console.log(JSON.stringify(result.data, null, 2));
         
@@ -124,11 +124,11 @@ async function retryableHealthCheck() {
         
         return 0;
       } else {
-        log(`\n✗ WARNING: Health check returned status ${result.statusCode}`, colors.yellow);
+        log(`\n WARNING: Health check returned status ${result.statusCode}`, colors.yellow);
         console.log('Response:', result.data);
       }
     } catch (error) {
-      log(`\n✗ ERROR: ${error.message}`, colors.red);
+      log(`\n ERROR: ${error.message}`, colors.red);
       
       if (i < MAX_RETRIES - 1) {
         log(`Retrying in ${RETRY_DELAY / 1000} seconds...`, colors.yellow);
@@ -137,7 +137,7 @@ async function retryableHealthCheck() {
     }
   }
 
-  log('\n✗ FAILED: Application health check failed after all retries', colors.red);
+  log('\n FAILED: Application health check failed after all retries', colors.red);
   log('\n=== Troubleshooting Steps ===', colors.yellow);
   log('1. Check if the application is running:', colors.yellow);
   log('   docker ps | grep musicvibe', colors.cyan);

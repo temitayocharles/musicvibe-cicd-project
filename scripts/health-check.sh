@@ -29,9 +29,9 @@ print_status() {
     local status=$1
     local message=$2
     if [ "$status" == "success" ]; then
-        echo -e "${GREEN}✓${NC} $message"
+        echo -e "${GREEN}${NC} $message"
     elif [ "$status" == "error" ]; then
-        echo -e "${RED}✗${NC} $message"
+        echo -e "${RED}${NC} $message"
     else
         echo -e "${YELLOW}•${NC} $message"
     fi

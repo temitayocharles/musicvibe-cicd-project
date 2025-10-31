@@ -1,79 +1,29 @@
-# Quick Reference Card
+# Command Reference Card
 
-**Complete CI/CD Pipeline Setup**
+**Quick commands and references for MusicVibe CI/CD Platform**
 
+>  **For complete setup instructions, see [MUSICVIBE-CICD-GUIDE.md](../MUSICVIBE-CICD-GUIDE.md)**
+
+---
 
 ## Infrastructure Overview
 
 ```
 5 EC2 Instances (t3.medium):
-├── Jenkins + K8s Master (combined)
-├── K8s Worker 1
-├── K8s Worker 2  
-├── Nexus + SonarQube (combined)
-└── Prometheus + Grafana (combined)
+ Jenkins + K8s Master (combined)
+ K8s Worker 1
+ K8s Worker 2  
+ Nexus + SonarQube (combined)
+ Prometheus + Grafana (combined)
 ```
 
-
-## Service URLs
-
-After deployment, access services at:
-
-```
-Jenkins:     http://<JENKINS_IP>:8080
-SonarQube:   http://<NEXUS_SONARQUBE_IP>:9000
-Nexus:       http://<NEXUS_SONARQUBE_IP>:8081
-Prometheus:  http://<PROMETHEUS_IP>:9090
-Grafana:     http://<PROMETHEUS_IP>:3000
-MusicVibe:   http://<WORKER_IP>:<NODE_PORT> or http://localhost:4000 (local)
-```
-
-
-## Service Discovery DNS (Internal)
-
-```
-jenkins-k8s-master.musicvibe-services.local
-k8s-worker-1.musicvibe-services.local
-k8s-worker-2.musicvibe-services.local
-nexus-sonarqube.musicvibe-services.local
-prometheus-grafana.musicvibe-services.local
-```
-
-
-## Default Credentials
-
-**AWS:**
-- Region: us-east-1
-- SSH Key: k8s-pipeline-key.pem
-
-**Jenkins:**
-- Username: admin
-- Initial Password: (from /var/lib/jenkins/secrets/initialAdminPassword)
-- Set your own during setup
-
-**SonarQube:**
-- Default: admin / admin
-- Change on first login
-
-**Nexus:**
-- Initial: admin / (from docker exec nexus cat /nexus-data/admin.password)
-- Set to: admin / admin123
-
-**Grafana:**
-- Default: admin / admin
-- Change on first login
-
-**Application (MusicVibe):**
-- No authentication required for basic features
-- Music search, preview playback, and lyrics viewing available to all users
-- Favorites require no login (stored in memory)
-
+---
 
 ## Quick Commands
 
 **Deploy infrastructure:**
 ```bash
-cd ~/Documents/PROJECTS/ec2-k8s
+cd musicvibe-cicd-project/terraform
 terraform init
 terraform apply
 ```
@@ -81,18 +31,19 @@ terraform apply
 **Get outputs:**
 ```bash
 terraform output
+terraform output > infrastructure-details.txt  # Save for reference
 ```
 
 **SSH to instances:**
 ```bash
-ssh -i k8s-pipeline-key.pem ubuntu@<PUBLIC_IP>
+ssh -i musicvibe-pipeline-key.pem ubuntu@<PUBLIC_IP>
 ```
 
 **Check K8s cluster:**
 ```bash
 kubectl get nodes
-kubectl get pods -n webapps
-kubectl get svc -n webapps
+kubectl get pods -n musicvibe
+kubectl get svc -n musicvibe
 ```
 
 **Destroy infrastructure:**
@@ -100,19 +51,46 @@ kubectl get svc -n webapps
 terraform destroy
 ```
 
+---
 
-## Jenkins Tool Names (for Jenkinsfile)
+## Service Discovery DNS (Internal)
 
 ```
-JDK: jdk17
-Maven: maven3.6
+jenkins-k8s-master.musicvibe.local
+k8s-worker-1.musicvibe.local
+k8s-worker-2.musicvibe.local
+tools.musicvibe.local (nexus-sonarqube)
+monitoring.musicvibe.local (prometheus-grafana)
+```
+
+---
+
+## Default Credentials Reference
+
+**Jenkins:**
+- Username: admin
+- Initial Password: `sudo cat /var/lib/jenkins/secrets/initialAdminPassword`
+
+**SonarQube:**
+- Default: admin / admin (change on first login)
+
+**Nexus:**
+- Initial: admin / `sudo docker exec -it nexus cat /nexus-data/admin.password`
+
+**Grafana:**
+- Default: admin / admin (change on first login)
+
+---
+
+## Jenkins Configuration IDs
+
+**Tool Names (for Jenkinsfile):**
+```
 Docker: docker
 SonarQube Scanner: sonar-scanner
 ```
 
-
-## Jenkins Credential IDs (for Jenkinsfile)
-
+**Credential IDs (for Jenkinsfile):**
 ```
 Docker Hub: docker-cred
 GitHub: git-cred
@@ -120,192 +98,71 @@ Kubernetes: k8-cred
 SonarQube: sonar-token
 ```
 
-
-## Pipeline Stages (11 Total)
-
-```
-1.  Git Checkout
-2.  Compile
-3.  Unit Tests
-4.  SonarQube Analysis
-5.  Quality Gate
-6.  Build
-7.  Publish to Nexus
-8.  Build Docker Image
-9.  Trivy Scan
-10. Push to Docker Hub
-11. Deploy to Kubernetes
-```
-
-
-## Repository URLs
-
-**Nexus Maven Repositories:**
-```
-Releases:  http://nexus-sonarqube.musicvibe-services.local:8081/repository/maven-releases/
-Snapshots: http://nexus-sonarqube.musicvibe-services.local:8081/repository/maven-snapshots/
-```
-
-
-## Docker Images
-
-**MusicVibe Application:**
-```
-temitayocharles/musicvibe:v1.0 (stable release)
-temitayocharles/musicvibe:latest (latest build)
-```
-
-**Pull and run:**
-```bash
-docker pull temitayocharles/musicvibe:v1.0
-docker run -d -p 4000:4000 temitayocharles/musicvibe:v1.0
-```
-
-**Multi-architecture support:**
-- linux/amd64 (Intel/AMD processors)
-- linux/arm64 (Apple Silicon, ARM servers)
-
-
-## Important Files
-
-**Terraform:**
-- terraform.auto.tfvars (your config - gitignored)
-- terraform.auto.tfvars.example (template)
-
-**Application:**
-- app/pom.xml (Maven config)
-- app/Dockerfile (Docker build)
-
-**CI/CD:**
-- ci-cd/Jenkinsfile (pipeline definition)
-- ci-cd/sonar-project.properties (SonarQube config)
-
-**Kubernetes:**
-- kubernetes/deployment-service.yaml (K8s manifest)
-
-**Guides:**
-- guides/00-START-HERE.md (navigation)
-- guides/01-10 (step-by-step instructions)
-
-
-## Time Estimates
-
-```
-Step 1: Architecture           5 min (reading)
-Step 2: AWS Setup             15 min
-Step 3: Local Setup           10 min
-Step 4: Terraform Deploy      20 min
-Step 5: Kubernetes Setup      20 min
-Step 6: Jenkins Config        40 min (most detailed)
-Step 7: SonarQube Setup       15 min
-Step 8: Nexus Setup           20 min
-Step 9: Pipeline Creation     30 min (first build)
-Step 10: Verification         25 min
-
-Total: ~3 hours for complete setup
-```
-
-
-## Troubleshooting Quick Tips
-
-**Service not accessible:**
-```bash
-# Check security group allows your IP
-# Check service is running:
-sudo systemctl status <service>
-docker ps
-```
-
-**Kubernetes pods not running:**
-```bash
-kubectl get pods -n webapps
-kubectl describe pod <pod-name> -n webapps
-kubectl logs <pod-name> -n webapps
-```
-
-**Pipeline failing:**
-```
-- Check Jenkins console output
-- Verify all credentials configured
-- Ensure services are accessible via service discovery
-- Review specific stage error messages
-```
-
-**DNS not resolving:**
-```bash
-# Wait 30-60 seconds after instance starts
-# Check Cloud Map in AWS Console
-# Test from instance: ping <service>.musicvibe-services.local
-```
-
+---
 
 ## Cost Optimization
 
-**Running all 5 instances:**
-- ~$0.50-0.60/hour
-- ~$12-15/day if left running
+**Running costs:**
+- All 5 instances: ~$0.50-0.60/hour (~$12-15/day)
+- Terraform feature flags can disable optional instances
 
-**Recommendation:**
+**Save money:**
 ```bash
-# When done for the day:
+# Daily shutdown:
 terraform destroy
 
-# Next session:
+# Restart next session:
 terraform apply
-# Reconfigure services (or use backups)
 ```
 
-
-## Getting Help
-
-**Check these in order:**
-
-1. Guide troubleshooting sections
-2. Console output / logs
-3. AWS Console (verify resources)
-4. Terraform state: `terraform show`
-5. Service logs: `sudo journalctl -u <service>`
-
-
-## Success Indicators
-
-**Infrastructure ready:**
-- All 5 instances running
-- Security groups attached
-- Service discovery DNS resolving
-
-**Kubernetes ready:**
-- 3 nodes Ready
-- All kube-system pods Running
-- Application namespace created
-
-**Jenkins ready:**
-- Accessible on port 8080
-- All plugins installed
-- All tools configured
-- All credentials added
-
-**Pipeline successful:**
-- All 11 stages green
-- Artifacts in Nexus
-- Analysis in SonarQube
-- Image in Docker Hub
-- App running in K8s
-
-
-## Next Steps After Completion
-
-**Expand your knowledge:**
-
-1. Add more pipeline stages (integration tests, etc.)
-2. Implement Ingress controller
-3. Set up TLS/SSL certificates
-4. Configure autoscaling
-5. Add monitoring alerts
-6. Implement blue-green deployments
-
+**Feature flags in terraform.auto.tfvars:**
+```hcl
+feature_flags = {
+  enable_monitoring_instance = false  # Saves ~$40/month
+  enable_tools_instance      = true   # Keep for CI/CD
+  enable_worker_2            = false  # Saves ~$40/month
+}
+```
 
 ---
 
+## Troubleshooting Commands
 
-**Save this reference card for quick lookups during setup!**
+**Service status:**
+```bash
+sudo systemctl status <service>
+docker ps
+sudo journalctl -u cloud-final  # Check user_data scripts
+```
+
+**Kubernetes debugging:**
+```bash
+kubectl get pods -n musicvibe
+kubectl describe pod <pod-name> -n musicvibe
+kubectl logs <pod-name> -n musicvibe
+```
+
+**DNS testing:**
+```bash
+ping <service>.musicvibe.local
+nslookup <service>.musicvibe.local
+```
+
+---
+
+## Quick File Locations
+
+**Generate your infrastructure details:**
+```bash
+terraform output > infrastructure-details.txt
+```
+
+**Key application files:**
+- `apps/api/package.json` - Node.js backend
+- `apps/frontend/package.json` - React frontend  
+- `ci-cd/Jenkinsfile` - Pipeline definition
+- `terraform.auto.tfvars` - Your infrastructure config
+
+---
+
+** For detailed setup instructions: [MUSICVIBE-CICD-GUIDE.md](../MUSICVIBE-CICD-GUIDE.md)**
