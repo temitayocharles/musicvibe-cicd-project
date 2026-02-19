@@ -1,0 +1,12 @@
+name: Baseline CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  baseline:
+    uses: temitayocharles/shared-workflows/.github/workflows/baseline-reusable.yml@main
